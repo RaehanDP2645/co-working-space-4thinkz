@@ -25,3 +25,32 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# ENV
+.env
+.env.*
+
+# Laravel
+backend/vendor/
+backend/node_modules/
+backend/storage/logs/*
+backend/bootstrap/cache/*
+backend/public/build
+
+# React
+frontend/node_modules/
+frontend/dist/
+
+# AI
+ai-service/node_modules/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
