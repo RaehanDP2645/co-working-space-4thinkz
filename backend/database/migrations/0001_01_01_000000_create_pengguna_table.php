@@ -6,17 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
+        Schema::create('pengguna', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('nama', 100);
+            $table->string('email', 100)->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('no_telepon', 20)->nullable();
+            $table->string('google_id')->nullable()->unique();
+            $table->string('peran', 20)->default('user');
             $table->rememberToken();
             $table->timestamps();
         });
@@ -42,7 +42,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('pengguna');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }
