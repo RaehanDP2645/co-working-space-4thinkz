@@ -12,8 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('rekomendasi_ruangan', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
+            $table->unsignedInteger('pengguna_id');
+            $table->unsignedInteger('ruangan_id');
+            $table->unsignedInteger('jumlah_peserta');
+            $table->string('jenis_aktivitas', 100)->nullable();
+            $table->decimal('anggaran', 12, 2)->nullable();
+            $table->string('kebutuhan_privasi', 10)->nullable();
             $table->timestamps();
+            $table->foreign('pengguna_id')->references('id')->on('pengguna')->onDelete('cascade');
+            $table->foreign('ruangan_id')->references('id')->on('ruangan')->onDelete('cascade');
         });
     }
 

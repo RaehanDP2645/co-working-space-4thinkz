@@ -18,8 +18,8 @@ return new class extends Migration
             $table->unsignedInteger('kapasitas');
             $table->decimal('harga', 12, 2); //format harga Rp2.xxx.xxx,xx
             $table->string('tingkat_privasi', 10)-> default('rendah');
-            $table->boolean('mendukung_presentasi')->default('false');
-            $table->boolean('mendukung_event')->default('false');
+            $table->boolean('mendukung_presentasi')->default(false);
+            $table->boolean('mendukung_event')->default(false);
             $table->string('status', 20)->default('tersedia'); //status ketersediaan ruangan
             $table->softDeletes();
             $table->timestamps();
