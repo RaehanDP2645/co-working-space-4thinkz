@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pembayarann', function (Blueprint $table) {
+        Schema::create('pembayaran', function (Blueprint $table) {
             $table->increments('id'); //primary key tabel pembayaran
             $table->unsignedInteger('pemesanan_id');
             $table->decimal('jumlah_bayar', 12, 2);
