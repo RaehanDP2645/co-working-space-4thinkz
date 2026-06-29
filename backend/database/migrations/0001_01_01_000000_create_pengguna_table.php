@@ -8,19 +8,19 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // buat tabel pengguna/user
         Schema::create('pengguna', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('nama', 100);
-            $table->string('email', 100)->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->string('no_telepon', 20)->nullable();
-            $table->string('google_id')->nullable()->unique();
-            $table->string('peran', 20)->default('user');
+            $table->increments('id'); //primary key
+            $table->string('nama', 100); //nama
+            $table->string('email', 100)->unique(); //email
+            $table->timestamp('email_verified_at')->nullable();            $table->string('password');
+            $table->string('no_telepon', 20)->nullable(); //no.hp (opsional)
+            $table->string('google_id')->nullable()->unique(); //id_sso_google
+            $table->string('peran', 20)->default('user'); //role default user
             $table->rememberToken();
             $table->timestamps();
         });
-
+        
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');
