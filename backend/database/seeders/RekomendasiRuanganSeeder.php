@@ -15,7 +15,7 @@ class RekomendasiRuanganSeeder extends Seeder
      */
     public function run(): void
     {
-        //memanggil pengguna/user dari database pengguna
+        //memanggil pengguna dari database pengguna
         $dewi  = User::where('email', 'dewi@example.com')->first();
         $reza  = User::where('email', 'reza@example.com')->first();
         $prita = User::where('email', 'prita@example.com')->first();

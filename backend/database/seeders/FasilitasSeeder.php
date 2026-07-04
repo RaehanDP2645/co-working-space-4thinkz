@@ -21,7 +21,7 @@ class FasilitasSeeder extends Seeder
             'Papan Tulis',
             'Smart TV',
             'Sound System',
-            'Meja $ Kursi Ergonomis',
+            'Meja & Kursi Ergonomis',
             'Loker',
         ];
 
@@ -35,7 +35,7 @@ class FasilitasSeeder extends Seeder
         $openSpace = Room::where('nama_ruangan', 'Open Space')->first();
         $event     = Room::where('nama_ruangan', 'Event Space')->first();
 
-        $wifi      = Facility::where('nama_fasilitas', 'WiFi Kecepatan Tinggi')->first();
+        $wifi      = Facility::where('nama_fasilitas', 'Wifi')->first();
         $proyektor = Facility::where('nama_fasilitas', 'Proyektor')->first();
         $ac        = Facility::where('nama_fasilitas', 'AC')->first();
         $papan     = Facility::where('nama_fasilitas', 'Papan Tulis')->first();

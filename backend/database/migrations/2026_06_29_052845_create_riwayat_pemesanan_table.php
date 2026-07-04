@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('riwayat_pemesanan', function (Blueprint $table) {
             $table->increments('id'); //primary key tabel riwayat_pemesanan
             $table->unsignedInteger('pemesanan_id');
-            $table->decimal('status_sebelumnya', 20)->nullable();
+            $table->string('status_sebelumnya', 20)->nullable();
             $table->string('status_sekarang', 20);
             $table->string('waktu_perubahan')->useCurrent();
             $table->timestamps();

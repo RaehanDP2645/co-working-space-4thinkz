@@ -13,6 +13,25 @@ return new class extends Migration
     {
         Schema::create('rekomendasi_ruangan', function (Blueprint $table) {
             $table->id();
+
+            $table->unsignedInteger('pengguna_id');
+            $table->foreign('pengguna_id')
+                ->references('id')
+                ->on('pengguna')
+                ->cascadeOnDelete();
+
+            $table->unsignedInteger('ruangan_id')->nullable();
+            $table->foreign('ruangan_id')
+                ->references('id')
+                ->on('ruangan')
+                ->nullOnDelete();
+
+            $table->integer('jumlah_peserta');
+            $table->decimal('anggaran', 10, 2);
+            $table->string('kebutuhan_privasi');
+            $table->text('alasan_rekomendasi');
+            $table->string('jenis_aktivitas');
+
             $table->timestamps();
         });
     }
