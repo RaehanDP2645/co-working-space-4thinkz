@@ -52,7 +52,7 @@ class Room extends Model
 
     public function recommendations(): HasMany
     {
-        return $this->hasMany(Recommendations::class, 'ruangan_id');
+        return $this->hasMany(Recommendation::class, 'ruangan_id');
     }
 
     public function isAvailable(): bool
