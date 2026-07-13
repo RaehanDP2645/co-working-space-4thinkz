@@ -12,13 +12,32 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('riwayat_pemesanan', function (Blueprint $table) {
-            $table->increments('id'); //primary key tabel riwayat_pemesanan
-            $table->unsignedInteger('pemesanan_id');
-            $table->string('status_sebelumnya', 20)->nullable();
-            $table->string('status_sekarang', 20);
-            $table->string('waktu_perubahan')->useCurrent();
-            $table->timestamps();
-            $table->foreign('pemesanan_id')->references('id')->on('pemesanan')->onDelete('cascade'); //foreign key tabel pemesanan
+            $table->id(); //primary key tabel riwayat_pemesanan
+            
+            $table->foreignId('pemesanan_id')
+                ->constrained('pemesanan')
+                ->cascadeOnDelete();
+
+            $table->enum('status_sebelumnya', [
+                'pending',
+                'paid',
+                'confirmed',
+                'completed',
+                'cancelled'
+            ])->nullable();
+
+            $table->enum('status_sekarang', [
+                'pending',
+                'paid',
+                'confirmed',
+                'completed',
+                'cancelled'
+            ]);
+
+            $table->timestamp('waktu_perubahan')
+                ->useCurrent();
+                
+            $table->index('pemesanan_id');
         });
     }
 
