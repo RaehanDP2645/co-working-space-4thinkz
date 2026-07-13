@@ -12,27 +12,40 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('rekomendasi_ruangan', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
 
-            $table->unsignedInteger('pengguna_id');
-            $table->foreign('pengguna_id')
-                ->references('id')
-                ->on('pengguna')
+            $table->foreignId('user_id')
+                ->constrained('users')
                 ->cascadeOnDelete();
 
-            $table->unsignedInteger('ruangan_id')->nullable();
-            $table->foreign('ruangan_id')
-                ->references('id')
-                ->on('ruangan')
+            $table->foreignId('ruangan_id')
+                ->nullable()
+                ->constrained('ruangan')
                 ->nullOnDelete();
 
-            $table->integer('jumlah_peserta');
-            $table->decimal('anggaran', 10, 2);
-            $table->string('kebutuhan_privasi');
-            $table->text('alasan_rekomendasi');
-            $table->string('jenis_aktivitas');
+            $table->unsignedInteger('jumlah_peserta');
+            $table->decimal('anggaran', 12, 2);
 
-            $table->timestamps();
+            $table->enum('kebutuhan_privasi', [
+                'publik',
+                'semi_private',
+                'private'
+            ]);
+
+            $table->text('alasan_rekomendasi');
+
+            $table->enum('jenis_aktivitas', [
+                'meeting',
+                'presentasi',
+                'event',
+                'work',
+                'diskusi'
+            ]);
+
+            $table->decimal('skor_rekomendasi',5,2)
+                ->nullable();
+
+            $table->index('jenis_aktivitas', 'jumlah_peserta');
         });
     }
 
