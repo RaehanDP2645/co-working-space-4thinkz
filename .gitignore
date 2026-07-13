@@ -85,6 +85,7 @@ frontend/.env
 
 ai-service/node_modules/
 ai-service/.env
+opencode.json
 
 
 # =====================
