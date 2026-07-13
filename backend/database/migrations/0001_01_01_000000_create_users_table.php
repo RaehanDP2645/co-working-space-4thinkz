@@ -8,15 +8,37 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // buat tabel pengguna/user
-        Schema::create('pengguna', function (Blueprint $table) {
-            $table->increments('id'); //primary key
-            $table->string('nama', 100); //nama
-            $table->string('email', 100)->unique(); //email
-            $table->timestamp('email_verified_at')->nullable();            $table->string('password');
-            $table->string('no_telepon', 20)->nullable(); //no.hp (opsional)
-            $table->string('google_id')->nullable()->unique(); //id_sso_google
-            $table->string('peran', 20)->default('user'); //role default user
+        // Tabel pengguna sistem
+        Schema::create('users', function (Blueprint $table) {
+            $table->id(); //primary key
+            $table->string('name', 100); //nama
+
+            $table->string('email', 100)
+                ->unique(); //email
+
+            $table->timestamp('email_verified_at')
+                ->nullable();      
+
+            $table->string('password')
+                ->nullable();
+
+            $table->string('no_telepon', 20)
+                ->nullable(); //no.hp (opsional)
+
+            $table->string('google_id')
+                ->nullable()
+                ->unique(); //id_sso_google
+            
+            $table->enum('role', [
+                'admin',
+                'customer',
+            ])->default('customer'); //role default user
+
+            $table->enum('status',[
+                'aktif',
+                'nonaktif'
+            ])->default('aktif');
+
             $table->rememberToken();
             $table->timestamps();
         });
@@ -42,7 +64,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pengguna');
+        Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }

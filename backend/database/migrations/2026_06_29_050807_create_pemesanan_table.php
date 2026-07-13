@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('pemesanan', function (Blueprint $table) {
             $table->increments('id'); //primary key tabel pemesanan
-            $table->string('id');
+            $table->string('kode_pemesanan')
+                ->unique()
+                ->after('id');
             $table->unsignedInteger('pengguna_id');
             $table->unsignedInteger('ruangan_id');
             $table->dateTime('waktu_mulai');
