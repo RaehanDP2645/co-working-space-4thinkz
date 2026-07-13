@@ -12,10 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('fasilitas_ruangan', function (Blueprint $table) {
-            $table->unsignedInteger('fasilitas_id'); //primary key tabel fasilitas
-            $table->unsignedInteger('ruangan_id'); //primary key tabel ruangan
-            $table->foreign('fasilitas_id')->references('id')->on('fasilitas')->onDelete('cascade'); //foreign key tabel fasilitas
-            $table->foreign('ruangan_id')->references('id')->on('ruangan')->onDelete('cascade'); //foreign key tabel ruangan
+            $table->foreignId('fasilitas_id'); //primary key tabel fasilitas
+            $table->foreignId('ruangan_id'); //primary key tabel ruangan
+            
+            $table->foreignId('fasilitas_id')
+                ->constrained('fasilitas') //foreign key tabel fasilitas
+                ->cascadeOnDelete();
+
+            $table->foreignId('ruangan_id')
+                ->constrained('ruangan') //foreign key tabel ruangan
+                ->cascadeOnDelete();
+
             $table->primary(['fasilitas_id', 'ruangan_id']); //composite primary key fasilitas-ruangan
             $table->timestamps();
         });
