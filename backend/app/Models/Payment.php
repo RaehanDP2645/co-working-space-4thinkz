@@ -27,7 +27,7 @@ class Payment extends Model
 
     protected $casts = [
         'jumlah_bayar' => 'decimal:2',
-        'waktu pembayaran' => 'datetime',
+        'waktu_pembayaran' => 'datetime',
     ];
 
     public function booking(): BelongsTo

@@ -1,0 +1,123 @@
+# =====================
+# General
+# =====================
+
+*.log
+*.sqlite*
+.DS_Store
+Thumbs.db
+
+
+# =====================
+# Environment
+# =====================
+
+.env
+.env.*
+.env.backup
+.env.production
+
+
+# =====================
+# IDE / Editor
+# =====================
+
+.phpactor.json
+.phpunit.result.cache
+/.phpunit.cache
+
+/.codex
+/.cursor/
+/.idea
+/.nova
+/.vscode
+/.zed
+
+.vscode/
+.idea/
+
+
+# =====================
+# Authentication / Keys
+# =====================
+
+/auth.json
+/storage/*.key
+
+
+# =====================
+# Laravel Backend
+# =====================
+
+backend/vendor/
+backend/node_modules/
+
+backend/public/build
+backend/public/hot
+backend/public/storage
+
+backend/storage/logs/*
+backend/storage/pail
+
+backend/bootstrap/cache/*
+
+backend/.phpunit.cache
+
+_ide_helper.php
+
+Homestead.json
+Homestead.yaml
+
+
+# =====================
+# React Frontend
+# =====================
+
+frontend/node_modules/
+frontend/dist/
+
+frontend/.env
+
+
+# =====================
+# AI Service
+# =====================
+
+ai-service/node_modules/
+ai-service/.env
+
+
+# =====================
+# Root Dependencies
+# =====================
+
+/vendor
+/node_modules
+
+
+# =====================
+# Root Build
+# =====================
+
+/public/build
+/public/fonts-manifest.dev.json
+/public/hot
+
+
+# =====================
+# Package Manager
+# =====================
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+
+# =====================
+# Temporary
+# =====================
+
+*.tmp
+*.temp
+*.zip

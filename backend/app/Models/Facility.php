@@ -19,7 +19,7 @@ class Facility extends Model
         return $this->belongsToMany(
             Room::class,
             'fasilitas_ruangan',
-            'faslitias_id',
+            'fasilitas_id',
             'ruangan_id'
         );
     }
