@@ -12,14 +12,36 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pembayaran', function (Blueprint $table) {
-            $table->increments('id'); //primary key tabel pembayaran
-            $table->unsignedInteger('pemesanan_id');
+            $table->id(); //primary key tabel pembayaran
+            
+            $table->foreignId('pemesanan_id')
+                ->constrained('pemesanan')
+                ->cascadeOnDelete();
+            
+            $table->string('kode_invoice')
+                ->unique();
+
             $table->decimal('jumlah_bayar', 12, 2);
-            $table->string('metode_pembayaran', 30)->nullable();
-            $table->string('status', 20)->default('belum_lunas');
-            $table->dateTime('waktu_pembayaran')->nullable();
-            $table->timestamps();
-            $table->foreign('pemesanan_id')->references('id')->on('pemesanan')->onDelete('cascade'); //foreign key tabel pemesanan
+
+            $table->enum('metode_pembayaran', [
+                'transfer_bank',
+                'qris',
+                'ewallet',
+                'credit_card'
+            ])->nullable();
+
+
+            $table->enum('status', [
+                'pending',
+                'paid',
+                'failed',
+                'refund'
+            ])->default('belum_lunas');
+
+            $table->dateTime('waktu_pembayaran')
+                ->nullable();
+            
+            $table->index('status');
         });
     }
 
