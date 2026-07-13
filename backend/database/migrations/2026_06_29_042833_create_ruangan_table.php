@@ -12,17 +12,41 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('ruangan', function (Blueprint $table) {
-            $table->increments('id'); //primary key id_ruangan
+            $table->id(); //primary key id_ruangan
             $table->string('nama_ruangan', 100);
-            $table->string('jenis_ruangan', 50);
+
+            $table->enum('jenis_ruangan', [
+                'Meeting Room',
+                'Private Office',
+                'Open Space',
+                'Event Space',
+            ]);
+
             $table->unsignedInteger('kapasitas');
-            $table->decimal('harga', 12, 2); //format harga Rp2.xxx.xxx,xx
-            $table->string('tingkat_privasi', 10)-> default('rendah');
-            $table->boolean('mendukung_presentasi')->default('0');
-            $table->boolean('mendukung_event')->default('0');
-            $table->string('status', 20)->default('tersedia'); //status ketersediaan ruangan
+            $table->decimal('harga_per_jam', 12, 2); //format harga Rp2.xxx.xxx,xx
+            
+            $table->string('gambar_url')
+                ->nullable();
+
+            $table->enum('tingkat_privasi', [
+                'publik',
+                'semi_private',
+                'private'
+            ])-> default('publik');
+
+            $table->boolean('mendukung_presentasi')
+                ->default(false);
+            
+            $table->boolean('mendukung_event')
+                ->default(false);
+            
+            $table->text('deskripsi')
+                ->nullable();
+
             $table->softDeletes();
             $table->timestamps();
+            $table->index('jenis_ruangan');
+            $table->index('kapasitas');
         });
     }
 
