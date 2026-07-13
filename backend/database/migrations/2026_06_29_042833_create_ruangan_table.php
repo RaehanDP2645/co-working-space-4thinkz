@@ -45,8 +45,7 @@ return new class extends Migration
 
             $table->softDeletes();
             $table->timestamps();
-            $table->index('jenis_ruangan');
-            $table->index('kapasitas');
+            $table->index('jenis_ruangan', 'kapasitas');
         });
     }
 
