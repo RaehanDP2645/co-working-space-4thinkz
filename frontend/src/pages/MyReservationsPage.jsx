@@ -1,7 +1,10 @@
 import React from 'react';
+import { rupiah } from '../constants';
 
 export default function MyReservationsPage({ reservations, onPay }) {
-  const activeRes = reservations.filter(r => r.status === "unpaid" || r.status === "paid");
+  const activeRes = reservations.filter(r =>
+    r.status === "unpaid" || r.status === "paid" || r.status === "partial" || r.status === "pending_payment"
+  );
   return (
     <div className="page-pad">
       <h2>Reservasi Saya</h2>
@@ -31,8 +34,17 @@ export default function MyReservationsPage({ reservations, onPay }) {
                     <span className="badge warn">Menunggu Pembayaran</span>
                     <button className="btn-primary" onClick={() => onPay(res)}>Bayar Sekarang</button>
                   </>
+                ) : res.status === "partial" ? (
+                  <>
+                    <span className="badge ok">DP Dibayar</span>
+                    <button className="btn-primary" onClick={() => onPay(res)}>
+                      Bayar Sisa {rupiah(res.room.price - res.dpAmount)}
+                    </button>
+                  </>
+                ) : res.status === "pending_payment" ? (
+                  <span className="badge warn">Menunggu Konfirmasi</span>
                 ) : (
-                  <span className="badge ok">Sudah Dibayar</span>
+                  <span className="badge ok">Lunas</span>
                 )}
               </div>
             </div>

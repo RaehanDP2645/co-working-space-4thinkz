@@ -22,7 +22,7 @@ export default function LoginScreen({ onLogin }) {
 
         <div className="divider">Fitur Utama</div>
 
-        <div className="feature-list" style={{ marginBottom: '24px' }}>
+        <div className="feature-list" style={{ marginBottom: '14px' }}>
           <div className="feature-item">
             <div className="dot">
               <IconCalendar />

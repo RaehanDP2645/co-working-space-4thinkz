@@ -12,7 +12,9 @@ import MyReservationsPage from './pages/MyReservationsPage';
 import PaymentPage from './pages/PaymentPage';
 import HistoryPage from './pages/HistoryPage';
 import ProfilePage from './pages/ProfilePage';
-import { ROOMS } from './constants';
+import { ROOMS, rupiah } from './constants';
+import ChatbotWidget from './components/ChatbotWidget';
+import { createTransaction, getTransaction } from './services/paywuz';
 
 // Admin Imports
 import AdminSidebar from './components/AdminSidebar';
@@ -41,8 +43,8 @@ export default function App() {
   
   // Customer Reservations
   const [reservations, setReservations] = useState([
-    { id: 101, room: ROOMS[0], date: "24 Mei 2024", time: "09.00 - 10.00", status: "unpaid", code: "RB-82741" },
-    { id: 102, room: ROOMS[2], date: "28 Mei 2024", time: "14.00 - 15.00", status: "paid", code: "RB-90234" },
+    { id: 101, room: ROOMS[0], date: "24 Mei 2024", time: "09.00 - 10.00", status: "unpaid", code: "RB-82741", paymentType: null, dpAmount: 0, paywuzTrxId: null },
+    { id: 102, room: ROOMS[2], date: "28 Mei 2024", time: "14.00 - 15.00", status: "paid", code: "RB-90234", paymentType: "full", dpAmount: 0, paywuzTrxId: null },
   ]);
 
   const [history] = useState([
@@ -87,18 +89,76 @@ export default function App() {
     setNotifications(prev => prev.filter(n => n.id !== id));
   };
 
-  const handleConfirmPayment = (id) => {
+  const getOrderId = (code, type) => {
+    if (type === 'dp') return `${code}-DP`;
+    if (type === 'remaining') return `${code}-SISA`;
+    return `${code}-FULL`;
+  };
+
+  const handlePaywuzPayment = async (id, paymentType) => {
     const target = reservations.find(r => r.id === id);
-    setReservations(prev => prev.map(r => r.id === id ? { ...r, status: "paid" } : r));
-    if (target) {
-      setNotifications(prev => [
-        {
-          id: Date.now(),
-          text: `Pembayaran ${target.room.name} berhasil dikonfirmasi. Selamat menggunakan ruangan!`,
-          time: "Baru saja"
-        },
-        ...prev
-      ]);
+    if (!target) return;
+
+    const totalPrice = target.room.price;
+    const dpAmount = Math.round(totalPrice * 0.5);
+    const amount = paymentType === 'dp' ? dpAmount : totalPrice;
+    const orderId = getOrderId(target.code, paymentType);
+
+    const result = await createTransaction({
+      orderId,
+      amount,
+      paymentMethod: 'QRIS',
+      metadata: {
+        reservationId: id,
+        paymentType,
+        roomName: target.room.name,
+      },
+    });
+
+    setReservations(prev => prev.map(r =>
+      r.id === id ? {
+        ...r,
+        paywuzTrxId: orderId,
+        paymentType,
+        dpAmount: paymentType === 'dp' ? dpAmount : 0,
+        status: 'pending_payment',
+      } : r
+    ));
+
+    return result;
+  };
+
+  const handleCheckPayment = async (id) => {
+    const target = reservations.find(r => r.id === id);
+    if (!target || !target.paywuzTrxId) return null;
+
+    try {
+      const result = await getTransaction(target.paywuzTrxId);
+      if (result && (result.status === 'settlement' || result.status === 'success')) {
+        const isDp = target.paymentType === 'dp';
+        const isRemaining = target.paymentType === 'remaining';
+        setReservations(prev => prev.map(r =>
+          r.id === id ? {
+            ...r,
+            status: isDp ? 'partial' : 'paid',
+            paymentType: isDp ? 'dp' : isRemaining ? 'remaining' : 'full',
+          } : r
+        ));
+        setNotifications(prev => [
+          {
+            id: Date.now(),
+            text: isDp
+              ? `DP ${rupiah(target.dpAmount)} untuk ${target.room.name} telah diterima. Silakan lunasi sisa pembayaran.`
+              : `Pembayaran ${target.room.name} lunas! Selamat menggunakan ruangan!`,
+            time: "Baru saja"
+          },
+          ...prev
+        ]);
+        return result;
+      }
+      return result;
+    } catch {
+      return null;
     }
   };
 
@@ -147,6 +207,17 @@ export default function App() {
     setAdminPage("dashboard");
   };
 
+  const handlePickRoom = (roomName) => {
+    if (!roomName) { setPage("rooms"); return; }
+    const found = ROOMS.find(r => r.name.toLowerCase().includes(roomName.toLowerCase()));
+    if (found) {
+      setRoom(found);
+      setPage("date");
+    } else {
+      setPage("rooms");
+    }
+  };
+
   if (!authed) {
     if (window.location.pathname === '/admin/login') {
       return <AdminLoginScreen onLogin={handleLogin} />;
@@ -164,7 +235,7 @@ export default function App() {
           rooms={adminRooms}
           customers={adminCustomers}
           payments={adminPayments}
-          onViewBookingDetail={(b) => {
+          onViewBookingDetail={() => {
             setAdminPage("bookings");
           }}
         />
@@ -220,24 +291,27 @@ export default function App() {
     }
 
     return (
-      <div className="app-shell">
-        <AdminSidebar 
-          page={adminPage}
-          setPage={setAdminPage}
-          onLogout={() => setAuthed(false)}
-          isOpen={sidebarOpen}
-          onClose={() => setSidebarOpen(false)}
-        />
-        <div className="main-area">
-          <AdminTopbar 
-            user={adminUser}
-            onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+      <>
+        <div className="app-shell">
+          <AdminSidebar 
+            page={adminPage}
             setPage={setAdminPage}
             onLogout={() => setAuthed(false)}
+            isOpen={sidebarOpen}
+            onClose={() => setSidebarOpen(false)}
           />
-          {adminContent}
+          <div className="main-area">
+            <AdminTopbar 
+              user={adminUser}
+              onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+              setPage={setAdminPage}
+              onLogout={() => setAuthed(false)}
+            />
+            {adminContent}
+          </div>
         </div>
-      </div>
+        <ChatbotWidget rooms={ROOMS} reservations={[]} onPickRoom={() => setAdminPage("dashboard")} />
+      </>
     );
   }
 
@@ -263,7 +337,10 @@ export default function App() {
             date: `${schedule.day} Mei 2024`,
             time: schedule.time,
             status: "unpaid",
-            code: newCode
+            code: newCode,
+            paymentType: null,
+            dpAmount: 0,
+            paywuzTrxId: null,
           };
           setReservations(prev => [newRes, ...prev]);
           setNotifications(prev => [
@@ -283,7 +360,13 @@ export default function App() {
   } else if (page === "myres") {
     content = <MyReservationsPage reservations={reservations} onPay={() => setPage("payment")} />;
   } else if (page === "payment") {
-    content = <PaymentPage reservations={reservations} onConfirmPayment={handleConfirmPayment} />;
+    content = (
+      <PaymentPage
+        reservations={reservations}
+        onPaywuzPayment={handlePaywuzPayment}
+        onCheckPayment={handleCheckPayment}
+      />
+    );
   } else if (page === "history") {
     content = <HistoryPage history={history} />;
   } else if (page === "profile") {
@@ -308,6 +391,7 @@ export default function App() {
         />
         {content}
       </div>
+      <ChatbotWidget rooms={ROOMS} reservations={reservations} onPickRoom={handlePickRoom} />
     </div>
   );
 }
