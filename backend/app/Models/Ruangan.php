@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Room extends Model
+class Ruangan extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -38,7 +38,7 @@ class Room extends Model
     public function facilities(): BelongsToMany
     {
         return $this->belongsToMany(
-            Facility::class,
+            Fasilitas::class,
             'fasilitas_ruangan',
             'ruangan_id',
             'fasilitas_id',
@@ -58,5 +58,12 @@ class Room extends Model
     public function isAvailable(): bool
     {
         return $this->status === self::STATUS_TERSEDIA;
+    }
+
+    public function getGambarUrlAttribute()
+    {
+        return $this->gambar
+            ? asset('storage/'.$this->gambar)
+            : asset('images/default-room.jpg');
     }
 }

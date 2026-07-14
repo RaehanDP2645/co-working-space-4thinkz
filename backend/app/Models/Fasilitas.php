@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Facility extends Model
+class Fasilitas extends Model
 {
     use HasFactory;
 
@@ -17,7 +17,7 @@ class Facility extends Model
     public function rooms(): BelongsToMany
     {
         return $this->belongsToMany(
-            Room::class,
+            Ruangan::class,
             'fasilitas_ruangan',
             'fasilitas_id',
             'ruangan_id'

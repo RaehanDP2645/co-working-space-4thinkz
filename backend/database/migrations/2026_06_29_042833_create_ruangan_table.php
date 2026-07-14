@@ -25,7 +25,7 @@ return new class extends Migration
             $table->unsignedInteger('kapasitas');
             $table->decimal('harga_per_jam', 12, 2); //format harga Rp2.xxx.xxx,xx
             
-            $table->string('gambar_url')
+            $table->string('gambar')
                 ->nullable();
 
             $table->enum('tingkat_privasi', [

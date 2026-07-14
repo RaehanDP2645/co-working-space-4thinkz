@@ -4,8 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Facility;
-use App\Models\Room;
+use App\Models\Fasilitas;
+use App\Models\Ruangan;
 
 class FasilitasSeeder extends Seeder
 {
@@ -26,25 +26,25 @@ class FasilitasSeeder extends Seeder
         ];
 
         foreach ($fasilitas as $nama) {
-            Facility::create(['nama_fasilitas' => $nama]);
+            Fasilitas::create(['nama_fasilitas' => $nama]);
         }
 
-        $meetingA = Room::where('nama_ruangan', 'Meeting Room A')->first();
-        $meetingB  = Room::where('nama_ruangan', 'Meeting Room B')->first();
-        $private   = Room::where('nama_ruangan', 'Private Office')->first();
-        $openSpace = Room::where('nama_ruangan', 'Open Space')->first();
-        $event     = Room::where('nama_ruangan', 'Event Space')->first();
+        $meetingA  = Ruangan::where('nama_ruangan', 'Meeting Room A')->first();
+        $meetingB  = Ruangan::where('nama_ruangan', 'Meeting Room B')->first();
+        $private   = Ruangan::where('nama_ruangan', 'Private Office')->first();
+        $openSpace = Ruangan::where('nama_ruangan', 'Open Space')->first();
+        $event     = Ruangan::where('nama_ruangan', 'Event Space')->first();
 
-        $wifi      = Facility::where('nama_fasilitas', 'Wifi')->first();
-        $proyektor = Facility::where('nama_fasilitas', 'Proyektor')->first();
-        $ac        = Facility::where('nama_fasilitas', 'AC')->first();
-        $papan     = Facility::where('nama_fasilitas', 'Papan Tulis')->first();
-        $smarttv   = Facility::where('nama_fasilitas', 'Smart TV')->first();
-        $sound     = Facility::where('nama_fasilitas', 'Sound System')->first();
-        $meja      = Facility::where('nama_fasilitas', 'Meja & Kursi Ergonomis')->first();
-        $loker     = Facility::where('nama_fasilitas', 'Loker')->first();
+        $wifi      = Fasilitas::where('nama_fasilitas', 'WiFi')->first();
+        $proyektor = Fasilitas::where('nama_fasilitas', 'Proyektor')->first();
+        $ac        = Fasilitas::where('nama_fasilitas', 'AC')->first();
+        $papan     = Fasilitas::where('nama_fasilitas', 'Papan Tulis')->first();
+        $smarttv   = Fasilitas::where('nama_fasilitas', 'Smart TV')->first();
+        $sound     = Fasilitas::where('nama_fasilitas', 'Sound System')->first();
+        $meja      = Fasilitas::where('nama_fasilitas', 'Meja & Kursi Ergonomis')->first();
+        $loker     = Fasilitas::where('nama_fasilitas', 'Loker')->first();
 
-        $meetingA->facilities()->attach([
+        $meetingA->fasilitas()->attach([
             $wifi->id,
             $ac->id,
             $proyektor->id,
@@ -53,7 +53,7 @@ class FasilitasSeeder extends Seeder
             $meja->id,
         ]);
 
-        $meetingB->facilities()->attach([
+        $meetingB->fasilitas()->attach([
             $wifi->id,
             $ac->id,
             $proyektor->id,
@@ -63,20 +63,20 @@ class FasilitasSeeder extends Seeder
             $meja->id,
         ]);
 
-        $private->facilities()->attach([
+        $private->fasilitas()->attach([
             $wifi->id,
             $ac->id,
             $meja->id,
             $loker->id,
         ]);
 
-        $openSpace->facilities()->attach([
+        $openSpace->fasilitas()->attach([
             $wifi->id,
             $ac->id,
             $meja->id,
         ]);
 
-        $event->facilities()->attach([
+        $event->fasilitas()->attach([
             $wifi->id,
             $ac->id,
             $proyektor->id,

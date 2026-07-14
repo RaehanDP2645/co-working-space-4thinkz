@@ -3,68 +3,68 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Room;
-use App\Http\Requests\RoomRequest;
+use App\Models\Ruangan;
+use App\Http\Requests\RuanganRequest;
 use Illuminate\Http\JsonResponse;
 
-class RoomController extends Controller
+class RuanganController extends Controller
 {
     /**
      * Daftar semua ruangan
      */
     public function index(): JsonResponse
     {
-        $rooms = Room::query()->latest()->get();
+        $Rooms = Ruangan::query()->latest()->get();
 
         return response()->json([
             'message' => 'Daftar ruangan berhasil diambil.',
-            'data' => $rooms,
+            'data' => $Rooms,
         ]);
     }
 
     /**
      * Detail ruangan
      */
-    public function show(Room $room): JsonResponse
+    public function show(Ruangan $Rooms): JsonResponse
     {
         return response()->json([
             'message' => 'Detail ruangan berhasil diambil.',
-            'data' => $room,
+            'data' => $Rooms,
         ]);
     }
 
     /**
      * Tambah ruangan baru
      */
-    public function store(RoomRequest $request): JsonResponse
+    public function store(RuanganRequest $request): JsonResponse
     {
-        $room = Room::create($request->validated());
+        $Rooms = Ruangan::create($request->validated());
 
         return response()->json([
             'message' => 'Ruangan berhasil ditambahkan.',
-            'data' => $room,
+            'data' => $Rooms,
         ]);
     }
 
     /**
      * Update ruangan
      */
-    public function update(RoomRequest $request, Room $room): JsonResponse
+    public function update(RuanganRequest $request, Ruangan $Rooms): JsonResponse
     {
-        $room->update($request->validated());
+        $Rooms->update($request->validated());
 
         return response()->json([
             'message' => 'Ruangan berhasil diperbarui.',
-            'data' => $room->fresh(),
+            'data' => $Rooms->fresh(),
         ]);
     }
 
     /**
      * hapus ruangan
      */
-    public function destroy(Room $room): JsonResponse
+    public function destroy(Ruangan $Rooms): JsonResponse
     {
-        $room->delete();
+        $Rooms->delete();
 
         return response()->json([
             'message' => 'Ruangan berhasil dihapus.',

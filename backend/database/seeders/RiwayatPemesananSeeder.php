@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Booking;
 use App\Models\BookingHistory;
-use App\Models\Room;
+use App\Models\Ruangan;
 use App\Models\User;
 
 class RiwayatPemesananSeeder extends Seeder
@@ -21,11 +21,11 @@ class RiwayatPemesananSeeder extends Seeder
         $prita = User::where('email', 'prita@example.com')->first();
         $dimas = User::where('email', 'dimas@example.com')->first();
 
-        $meetingA = Room::where('nama_ruangan', 'Meeting Room A')->first();
-        $meetingB = Room::where('nama_ruangan', 'Meeting Room B')->first();
-        $private  = Room::where('nama_ruangan', 'Private Office')->first();
-        $open     = Room::where('nama_ruangan', 'Open Space')->first();
-        $event    = Room::where('nama_ruangan', 'Event Space')->first();
+        $meetingA = Ruangan::where('nama_ruangan', 'Meeting Room A')->first();
+        $meetingB = Ruangan::where('nama_ruangan', 'Meeting Room B')->first();
+        $private  = Ruangan::where('nama_ruangan', 'Private Office')->first();
+        $open     = Ruangan::where('nama_ruangan', 'Open Space')->first();
+        $event    = Ruangan::where('nama_ruangan', 'Event Space')->first();
 
         $b1 = Booking::where('pengguna_id', $dewi->id)->where('ruangan_id', $meetingA->id)->first();
         $b2 = Booking::where('pengguna_id', $reza->id)->where('ruangan_id', $open->id)->first();
