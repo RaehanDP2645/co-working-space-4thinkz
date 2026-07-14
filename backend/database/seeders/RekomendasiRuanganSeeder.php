@@ -4,8 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Recommendation;
-use App\Models\Room;
+use App\Models\RekomendasiRuangan;
+use App\Models\Ruangan;
 use App\Models\User;
 
 class RekomendasiRuanganSeeder extends Seeder
@@ -15,76 +15,150 @@ class RekomendasiRuanganSeeder extends Seeder
      */
     public function run(): void
     {
-        //memanggil pengguna dari database pengguna
-        $dewi  = User::where('email', 'dewi@example.com')->first();
-        $reza  = User::where('email', 'reza@example.com')->first();
-        $prita = User::where('email', 'prita@example.com')->first();
-        $dimas = User::where('email', 'dimas@example.com')->first();
 
-        //memanggil ruangan dari database ruangan
-        $meetingA = Room::where('nama_ruangan', 'Meeting Room A')->first();
-        $meetingB = Room::where('nama_ruangan', 'Meeting Room B')->first();
-        $private  = Room::where('nama_ruangan', 'Private Office')->first();
-        $open     = Room::where('nama_ruangan', 'Open Space')->first();
-        $event    = Room::where('nama_ruangan', 'Event Space')->first();
+        // mengambil pengguna
+        $budi = User::where('email', 'budi@mail.com')->first();
+        $ani  = User::where('email', 'ani@mail.com')->first();
+        $rudi = User::where('email', 'rudi@mail.com')->first();
+        $siti = User::where('email', 'siti@mail.com')->first();
+        $dewi = User::where('email', 'dewi@mail.com')->first();
 
-        //contoh isi table rekomendasi ruangan untuk ai
+
+
+        // mengambil ruangan
+        $meetingA = Ruangan::where('nama_ruangan', 'Meeting Room A')->first();
+        $meetingB = Ruangan::where('nama_ruangan', 'Meeting Room B')->first();
+        $private  = Ruangan::where('nama_ruangan', 'Private Office')->first();
+        $open     = Ruangan::where('nama_ruangan', 'Open Space')->first();
+        $event    = Ruangan::where('nama_ruangan', 'Event Space')->first();
+
         $rekomendasi = [
+
+
             [
-                // input user dewi > assistant ai:
-                'pengguna_id'        => $dewi->id,
-                'ruangan_id'         => $meetingA->id,
-                'jumlah_peserta'     => 8,
-                'jenis_aktivitas'    => 'meeting',
-                'anggaran'           => 200000,
-                'kebutuhan_privasi'  => 'sedang',
-                'alasan_rekomendasi' => 'Meeting Room A cocok untuk 8 peserta dengan kebutuhan presentasi dan privasi sedang. Kapasitas 10 orang dengan fasilitas proyektor dan smart TV tersedia.',
-                // ^ ^ hasil sistem pakar dikirim ke openclaw untuk output rekomendasi ruangan ke user dewi
+                // User: Budi
+                // Input:
+                // 8 orang, meeting, budget 200rb, privasi sedang
+
+                'user_id' => $budi->id,
+
+                'ruangan_id' => $meetingA->id,
+
+                'jumlah_peserta' => 8,
+
+                'jenis_aktivitas' => 'meeting',
+
+                'anggaran' => 200000,
+
+                'tingkat_privasi' => 'semi_private',
+
+                'alasan_rekomendasi' =>
+                    'Meeting Room A direkomendasikan untuk meeting 8 peserta. Kapasitas 10 orang dengan fasilitas WiFi, AC, proyektor, dan papan tulis yang mendukung aktivitas rapat.',
+
             ],
+
+
+
             [
-                'pengguna_id'        => $reza->id,
-                'ruangan_id'         => $open->id,
-                'jumlah_peserta'     => 1,
-                'jenis_aktivitas'    => 'kerja individu',
-                'anggaran'           => 250000,
-                'kebutuhan_privasi'  => 'rendah',
-                'alasan_rekomendasi' => 'Open Space direkomendasikan untuk kerja individu dengan anggaran fleksibel dan tidak membutuhkan privasi khusus. Suasana coworking yang produktif.',
+                // User: Ani
+                // Input:
+                // kerja individu
+
+                'user_id' => $ani->id,
+
+                'ruangan_id' => $open->id,
+
+                'jumlah_peserta' => 1,
+
+                'jenis_aktivitas' => 'kerja individu',
+
+                'anggaran' => 250000,
+
+                'tingkat_privasi' => 'publik',
+
+                'alasan_rekomendasi' =>
+                    'Open Space cocok untuk pengguna individu yang membutuhkan tempat kerja fleksibel dengan suasana coworking dan biaya lebih terjangkau.',
+
             ],
+
+
+
             [
-                'pengguna_id'        => $prita->id,
-                'ruangan_id'         => $meetingB->id,
-                'jumlah_peserta'     => 15,
-                'jenis_aktivitas'    => 'presentasi',
-                'anggaran'           => 600000,
-                'kebutuhan_privasi'  => 'sedang',
-                'alasan_rekomendasi' => 'Meeting Room B ideal untuk presentasi dengan 15 peserta. Kapasitas 20 orang, dilengkapi sound system dan proyektor untuk presentasi profesional.',
+                // User: Rudi
+                // Presentasi
+
+                'user_id' => $rudi->id,
+
+                'ruangan_id' => $meetingB->id,
+
+                'jumlah_peserta' => 15,
+
+                'jenis_aktivitas' => 'presentasi',
+
+                'anggaran' => 600000,
+
+                'tingkat_privasi' => 'semi_private',
+
+                'alasan_rekomendasi' =>
+                    'Meeting Room B direkomendasikan untuk presentasi 15 peserta. Kapasitas 20 orang dengan fasilitas proyektor, Smart TV, dan sound system.',
+
             ],
+
+
+
             [
-                'pengguna_id'        => $dimas->id,
-                'ruangan_id'         => $private->id,
-                'jumlah_peserta'     => 3,
-                'jenis_aktivitas'    => 'kerja tim',
-                'anggaran'           => 300000,
-                'kebutuhan_privasi'  => 'tinggi',
-                'alasan_rekomendasi' => 'Private Office direkomendasikan untuk tim kecil 3 orang yang membutuhkan privasi tinggi. Ruangan tertutup dengan fasilitas lengkap dan loker.',
+                // User: Siti
+                // Kerja tim kecil
+
+                'user_id' => $siti->id,
+
+                'ruangan_id' => $private->id,
+
+                'jumlah_peserta' => 3,
+
+                'jenis_aktivitas' => 'kerja tim',
+
+                'anggaran' => 300000,
+
+                'tingkat_privasi' => 'private',
+
+                'alasan_rekomendasi' =>
+                    'Private Office cocok untuk tim kecil yang membutuhkan ruang tertutup dengan tingkat privasi tinggi dan fasilitas pendukung kerja.',
+
             ],
+
+
+
             [
-                //input user dewi > ai assistant yang error
-                'pengguna_id'        => $dewi->id,
-                'ruangan_id'         => null,
-                // ^^ nilai null karena tidak ada ruangan yg cocok dengan input user dewi
-                'jumlah_peserta'     => 200,
-                'jenis_aktivitas'    => 'konser',
-                'anggaran'           => 100000,
-                'kebutuhan_privasi'  => 'rendah',
-                'alasan_rekomendasi' => 'Tidak ada ruangan yang tersedia untuk 200 peserta dengan anggaran Rp100.000. Silakan sesuaikan jumlah peserta atau anggaran Anda.',
-                // ^^ hasil output yang kosong karena tidak menemukan ruangan dengan input user dewi
-                // jadi user diminta memasukkan input yang sesuai dengan daftar ruangan yang ada
+                // Simulasi AI gagal menemukan ruangan
+
+                'user_id' => $dewi->id,
+
+                'ruangan_id' => null,
+
+                'jumlah_peserta' => 200,
+
+                'jenis_aktivitas' => 'event besar',
+
+                'anggaran' => 100000,
+
+                'tingkat_privasi' => 'publik',
+
+                'alasan_rekomendasi' =>
+                    'Tidak ditemukan ruangan yang sesuai untuk 200 peserta dengan budget Rp100.000. Silakan ubah jumlah peserta atau anggaran.',
+
             ],
+
+
         ];
 
+
+
         foreach ($rekomendasi as $data) {
-            Recommendation::create($data);
+
+            RekomendasiRuangan::create($data);
+
         }
+
     }
 }

@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('pembayaran', function (Blueprint $table) {
             $table->id(); //primary key tabel pembayaran
-            
+
             $table->foreignId('pemesanan_id')
                 ->constrained('pemesanan')
                 ->cascadeOnDelete();
-            
+
             $table->string('kode_invoice')
                 ->unique();
 
@@ -30,8 +30,8 @@ return new class extends Migration
                 'credit_card'
             ])->nullable();
 
-
             $table->enum('status', [
+                'belum_lunas',
                 'pending',
                 'paid',
                 'failed',
@@ -40,7 +40,9 @@ return new class extends Migration
 
             $table->dateTime('waktu_pembayaran')
                 ->nullable();
-            
+
+            $table->timestamps();
+
             $table->index('status');
         });
     }

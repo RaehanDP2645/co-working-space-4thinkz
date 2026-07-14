@@ -14,7 +14,7 @@ class Fasilitas extends Model
 
     protected $fillable = ['nama_fasilitas'];
 
-    public function rooms(): BelongsToMany
+    public function ruangan(): BelongsToMany
     {
         return $this->belongsToMany(
             Ruangan::class,

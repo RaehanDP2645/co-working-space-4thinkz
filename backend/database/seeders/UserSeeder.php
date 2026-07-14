@@ -14,9 +14,11 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+
+        // Admin
         User::create([
-            'name' => 'Admin 4Thinkz',
-            'email' => 'admin@4thinkz.com',
+            'name' => 'Administrator',
+            'email' => 'admin@ruangkita.com',
             'password' => Hash::make('admin123'),
             'no_telepon' => '-',
             'email_verified_at' => now(),
@@ -24,30 +26,44 @@ class UserSeeder extends Seeder
             'status' => 'aktif',
         ]);
 
+
         $pelanggan = [
+
             [
                 'name' => 'Budi Santoso',
-                'email' => 'budi@example.com',
+                'email' => 'budi@mail.com',
                 'no_telepon' => '081234567890'
             ],
+
             [
                 'name' => 'Ani Wijaya',
-                'email' => 'ani@example.com',
+                'email' => 'ani@mail.com',
                 'no_telepon' => '081298765432'
             ],
-            [
-                'name' => 'Dewi Lestari',
-                'email' => 'dewi@example.com',
-                'no_telepon' => '081122334455'
-            ],
+
             [
                 'name' => 'Rudi Hartono',
-                'email' => 'rudi@example.com',
+                'email' => 'rudi@mail.com',
                 'no_telepon' => '081344556677'
             ],
+
+            [
+                'name' => 'Siti Rahma',
+                'email' => 'siti@mail.com',
+                'no_telepon' => '081355667788'
+            ],
+
+            [
+                'name' => 'Dewi Lestari',
+                'email' => 'dewi@mail.com',
+                'no_telepon' => '081122334455'
+            ],
+
         ];
 
+
         foreach ($pelanggan as $data) {
+
             User::create([
                 'name' => $data['name'],
                 'email' => $data['email'],
@@ -57,6 +73,7 @@ class UserSeeder extends Seeder
                 'role' => 'customer',
                 'status' => 'aktif',
             ]);
+
         }
     }
 }

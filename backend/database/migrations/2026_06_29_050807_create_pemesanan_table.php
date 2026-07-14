@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id(); //primary key tabel pemesanan
 
             $table->string('kode_pemesanan')
-                ->unique()
-                ->after('id');
+                ->unique();
 
             $table->foreignId('user_id')
                 ->constrained('users')
@@ -39,26 +38,18 @@ return new class extends Migration
 
             $table->decimal('total_biaya', 12, 2);
 
+            $table->unsignedInteger('jumlah_orang')->nullable();
+
             $table->text('catatan')
                 ->nullable();
 
-            $table->foreign('users_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('cascade'); //foreign key tabel users
-
-            $table->foreign('ruangan_id')
-                ->references('id')
-                ->on('ruangan')
-                ->onDelete('cascade'); //foreign key tabel ruangan
-
             $table->softDeletes();
             $table->timestamps();
-            
+
             $table->index([
-                'ruangan_id', 
-                'waktu_mulai', 
-                'waktu_selesai', 
+                'ruangan_id',
+                'waktu_mulai',
+                'waktu_selesai',
                 'status'
             ]);
         });

@@ -15,7 +15,7 @@ class FasilitasSeeder extends Seeder
     public function run(): void
     {
         $fasilitas = [
-            'Wifi',
+            'WiFi',
             'Proyektor',
             'AC',
             'Papan Tulis',

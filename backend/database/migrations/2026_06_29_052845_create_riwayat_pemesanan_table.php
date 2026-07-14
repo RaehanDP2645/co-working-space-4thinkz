@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('riwayat_pemesanan', function (Blueprint $table) {
             $table->id(); //primary key tabel riwayat_pemesanan
-            
+
             $table->foreignId('pemesanan_id')
                 ->constrained('pemesanan')
                 ->cascadeOnDelete();
@@ -36,7 +36,9 @@ return new class extends Migration
 
             $table->timestamp('waktu_perubahan')
                 ->useCurrent();
-                
+
+            $table->timestamps();
+
             $table->index('pemesanan_id');
         });
     }

@@ -26,7 +26,7 @@ return new class extends Migration
             $table->unsignedInteger('jumlah_peserta');
             $table->decimal('anggaran', 12, 2);
 
-            $table->enum('kebutuhan_privasi', [
+            $table->enum('tingkat_privasi', [
                 'publik',
                 'semi_private',
                 'private'
@@ -38,12 +38,15 @@ return new class extends Migration
                 'meeting',
                 'presentasi',
                 'event',
-                'work',
-                'diskusi'
+                'kerja individu',
+                'kerja tim',
+                'event besar'
             ]);
 
-            $table->decimal('skor_rekomendasi',5,2)
+            $table->decimal('skor_rekomendasi', 5, 2)
                 ->nullable();
+
+            $table->timestamps();
 
             $table->index('jenis_aktivitas', 'jumlah_peserta');
         });

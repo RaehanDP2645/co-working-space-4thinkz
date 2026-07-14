@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 class Payment extends Model
 {
@@ -14,10 +13,12 @@ class Payment extends Model
     protected $table = 'pembayaran';
 
     public const STATUS_BELUM_LUNAS = 'belum_lunas';
-    public const STATUS_LUNAS = 'lunas';
-    public const STATUS_GAGAL = 'gagal';
+    public const STATUS_PAID = 'paid';
+    public const STATUS_GAGAL = 'failed';
+    public const STATUS_REFUND = 'refund';
 
     public $fillable = [
+        'kode_invoice',
         'pemesanan_id',
         'jumlah_bayar',
         'metode_pembayaran',
@@ -30,8 +31,8 @@ class Payment extends Model
         'waktu_pembayaran' => 'datetime',
     ];
 
-    public function booking(): BelongsTo
+    public function Pemesanan(): BelongsTo
     {
-        return $this->belongsTo(Booking::class, 'pemesanan_id');
+        return $this->belongsTo(Pemesanan::class, 'pemesanan_id');
     }
 }

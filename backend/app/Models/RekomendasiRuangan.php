@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Recommendation extends Model
+class RekomendasiRuangan extends Model
 {
     use HasFactory;
 
     protected $table = 'rekomendasi_ruangan';
 
     protected $fillable = [
-        'pengguna_id',
+        'user_id',
         'ruangan_id',
         'jumlah_peserta',
         'jenis_aktivitas',
@@ -28,6 +28,6 @@ class Recommendation extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'pengguna_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

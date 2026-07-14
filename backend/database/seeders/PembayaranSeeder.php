@@ -4,9 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Booking;
+use App\Models\Pemesanan;
 use App\Models\Payment;
-use App\Models\Ruangan;
 use App\Models\User;
 
 class PembayaranSeeder extends Seeder
@@ -16,63 +15,87 @@ class PembayaranSeeder extends Seeder
      */
     public function run(): void
     {
-        $dewi  = User::where('email', 'dewi@example.com')->first();
-        $reza  = User::where('email', 'reza@example.com')->first();
-        $prita = User::where('email', 'prita@example.com')->first();
-        $dimas = User::where('email', 'dimas@example.com')->first();
+        $budi = User::where('email', 'budi@mail.com')->first();
+        $ani  = User::where('email', 'ani@mail.com')->first();
+        $rudi = User::where('email', 'rudi@mail.com')->first();
+        $dewi = User::where('email', 'dewi@mail.com')->first();
 
-        $meetingA = Ruangan::where('nama_ruangan', 'Meeting Room A')->first();
-        $meetingB = Ruangan::where('nama_ruangan', 'Meeting Room B')->first();
-        $private  = Ruangan::where('nama_ruangan', 'Private Office')->first();
-        $open     = Ruangan::where('nama_ruangan', 'Open Space')->first();
-        $event    = Ruangan::where('nama_ruangan', 'Event Space')->first();
 
-        $b1 = Booking::where('pengguna_id', $dewi->id)->where('ruangan_id', $meetingA->id)->first();
-        $b2 = Booking::where('pengguna_id', $reza->id)->where('ruangan_id', $open->id)->first();
-        $b3 = Booking::where('pengguna_id', $prita->id)->where('ruangan_id', $meetingB->id)->first();
-        $b4 = Booking::where('pengguna_id', $dimas->id)->where('ruangan_id', $private->id)->first();
-        $b5 = Booking::where('pengguna_id', $dewi->id)->where('ruangan_id', $event->id)->first();
+        $b1 = Pemesanan::where('kode_pemesanan', 'RB-90234')->first();
+        $b2 = Pemesanan::where('kode_pemesanan', 'RB-82741')->first();
+        $b3 = Pemesanan::where('kode_pemesanan', 'RB-12345')->first();
+        $b4 = Pemesanan::where('kode_pemesanan', 'RB-98765')->first();
+
+
 
         $pembayaran = [
+
             [
-                'pemesanan_id'       => $b1->id,
-                'jumlah_bayar'       => 300000,
-                'metode_pembayaran'  => 'transfer',
-                'status'             => Payment::STATUS_LUNAS,
-                'waktu_pembayaran'   => '2026-07-01 08:30:00',
+                'kode_invoice' => 'INV-90234',
+
+                'pemesanan_id' => $b1->id,
+
+                'jumlah_bayar' => 300000,
+
+                'metode_pembayaran' => 'transfer_bank',
+
+                'status' => 'paid',
+
+                'waktu_pembayaran' => '2026-06-29 08:30:00',
             ],
+
+
             [
-                'pemesanan_id'       => $b2->id,
-                'jumlah_bayar'       => 1600000,
-                'metode_pembayaran'  => 'e_wallet',
-                'status'             => Payment::STATUS_LUNAS,
-                'waktu_pembayaran'   => '2026-07-01 09:45:00',
+                'kode_invoice' => 'INV-82741',
+
+                'pemesanan_id' => $b2->id,
+
+                'jumlah_bayar' => 500000,
+
+                'metode_pembayaran' => 'ewallet',
+
+                'status' => 'pending',
+
+                'waktu_pembayaran' => null,
             ],
+
+
             [
-                'pemesanan_id'       => $b3->id,
-                'jumlah_bayar'       => 500000,
-                'metode_pembayaran'  => 'transfer',
-                'status'             => Payment::STATUS_LUNAS,
-                'waktu_pembayaran'   => '2026-07-02 12:00:00',
+                'kode_invoice' => 'INV-12345',
+
+                'pemesanan_id' => $b3->id,
+
+                'jumlah_bayar' => 250000,
+
+                'metode_pembayaran' => 'credit_card',
+
+                'status' => 'paid',
+
+                'waktu_pembayaran' => '2026-06-30 09:30:00',
             ],
+
+
             [
-                'pemesanan_id'       => $b4->id,
-                'jumlah_bayar'       => 675000,
-                'metode_pembayaran'  => 'kartu_kredit',
-                'status'             => Payment::STATUS_BELUM_LUNAS,
-                'waktu_pembayaran'   => null,
+                'kode_invoice' => 'INV-98765',
+
+                'pemesanan_id' => $b4->id,
+
+                'jumlah_bayar' => 400000,
+
+                'metode_pembayaran' => 'transfer_bank',
+
+                'status' => 'refund',
+
+                'waktu_pembayaran' => '2026-06-27 14:30:00',
             ],
-            [
-                'pemesanan_id'       => $b5->id,
-                'jumlah_bayar'       => 2000000,
-                'metode_pembayaran'  => null,
-                'status'             => Payment::STATUS_BELUM_LUNAS,
-                'waktu_pembayaran'   => null,
-            ],
+
         ];
 
+
         foreach ($pembayaran as $data) {
+
             Payment::create($data);
+
         }
     }
 }

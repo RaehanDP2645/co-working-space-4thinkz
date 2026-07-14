@@ -23,8 +23,8 @@ class BookingHistory extends Model
         'waktu_perubahan' => 'datetime',
     ];
 
-    public function booking(): BelongsTo
+    public function pemesanan(): BelongsTo
     {
-        return $this->belongsTo(Booking::class, 'pemesanan_id');
+        return $this->belongsTo(Pemesanan::class, 'pemesanan_id');
     }
 }

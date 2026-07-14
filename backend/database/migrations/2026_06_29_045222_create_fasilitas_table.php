@@ -14,13 +14,6 @@ return new class extends Migration
         Schema::create('fasilitas', function (Blueprint $table) {
             $table->id(); //primary key
             $table->string('nama_fasilitas', 100);
-
-            $table->string('ikon')
-                ->nullable();
-
-            $table->text('deskripsi')
-                ->nullable();
-
             $table->timestamps();
         });
     }

@@ -8,22 +8,24 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Booking extends Model
+class Pemesanan extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $table = 'pemesanan';
 
     public const STATUS_MENUNGGU = 'menunggu';
+    public const STATUS_DIBAYAR = 'dibayar';
     public const STATUS_DIKONFIRMASI = 'dikonfirmasi';
     public const STATUS_SELESAI = 'selesai';
     public const STATUS_DIBATALKAN = 'dibatalkan';
 
     protected $fillable = [
-        'pengguna_id',
+        'user_id',
         'ruangan_id',
         'waktu_mulai',
         'waktu_selesai',
+        'jumlah_orang',
         'status',
         'total_biaya',
     ];
@@ -36,7 +38,7 @@ class Booking extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'pengguna_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function room(): BelongsTo

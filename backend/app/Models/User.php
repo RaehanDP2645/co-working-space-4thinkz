@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,23 +15,21 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    public const ROLE_ADMIN = 'admin';
-    public const ROLE_USER = 'user';
-
-    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, HasApiTokens;
 
-    protected $table = 'pengguna';
+    public const ROLE_ADMIN = 'admin';
+    public const ROLE_USER = 'customer';
 
     protected $fillable = [
-        'nama',
+        'name',
         'email',
         'password',
         'no_telepon',
         'google_id',
-        'peran',
+        'role',
+        'status',
     ];
-    
+
     protected $hidden = [
         'password',
         'remember_token',
@@ -44,18 +40,18 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function bookings():HasMany
+    public function Pemesanan(): HasMany
     {
-        return $this->hasMany(Booking::class, 'pengguna_id');
+        return $this->hasMany(Pemesanan::class, 'user_id');
     }
 
-    public function recommendations(): HasMany
+    public function rekomendasi(): HasMany
     {
-        return $this->hasMany(Recommendation::class, 'pengguna_id');
+        return $this->hasMany(RekomendasiRuangan::class, 'user_id');
     }
 
     public function isAdmin(): bool
     {
-        return $this->peran === self::ROLE_ADMIN;
+        return $this->role === self::ROLE_ADMIN;
     }
 }
