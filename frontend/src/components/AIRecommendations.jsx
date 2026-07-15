@@ -45,8 +45,8 @@ export default function AIRecommendations({ onSelect }) {
       {!results && (
         <div className="ai-rec-form">
           <div className="ai-rec-field">
-            <label>Tujuan</label>
-            <div className="ai-rec-chips">
+            <label>kegiatan</label>
+            <div className="ai-rec-chi  ps">
               {PURPOSES.map((p) => (
                 <button
                   key={p.key}
