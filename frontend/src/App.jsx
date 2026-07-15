@@ -334,7 +334,7 @@ export default function App() {
           const newRes = {
             id: Date.now(),
             room: room,
-            date: `${schedule.day} Mei 2024`,
+            date: schedule.date,
             time: schedule.time,
             status: "unpaid",
             code: newCode,

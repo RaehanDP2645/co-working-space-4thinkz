@@ -208,6 +208,9 @@ input,textarea,select{font-family:inherit;}
 .legend .lg-dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:8px;}
 .calendar{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:18px;}
 .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;font-weight:700;font-size:14.5px;}
+.cal-title{display:flex;align-items:center;gap:6px;}
+.cal-year{border:none;background:transparent;font-weight:700;font-size:14.5px;color:var(--ink);cursor:pointer;font-family:inherit;padding:2px 4px;border-radius:6px;}
+.cal-year:hover{background:var(--green-100);}
 .cal-nav{background:none;color:var(--ink-soft);font-size:15px;padding:4px 8px;border-radius:6px;}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center;}
 .cal-dow{font-size:11px;color:var(--ink-soft);font-weight:700;padding-bottom:4px;}

@@ -28,7 +28,7 @@ export default function FormPage({ room, schedule, onBack, onSubmit }) {
             <img src={room.img} alt="" />
             <div className="sn">{room.name}</div>
           </div>
-          <div className="summary-row"><span>Tanggal</span><b>{schedule.day} Mei 2024</b></div>
+          <div className="summary-row"><span>Tanggal</span><b>{schedule.date}</b></div>
           <div className="summary-row"><span>Waktu</span><b>{schedule.time} (1 Jam)</b></div>
           <div className="summary-row"><span>Kapasitas</span><b>{room.cap} Orang</b></div>
           <div className="summary-row"><span>Harga / Jam</span><b>{rupiah(room.price)}</b></div>
