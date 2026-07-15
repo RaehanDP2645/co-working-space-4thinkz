@@ -32,6 +32,16 @@ export default function RoomsPage({ onSelect }) {
             <div className="rc-body">
               <div className="rc-name">{r.name}</div>
               <div className="rc-cap">Kapasitas: {r.cap} Orang</div>
+              {r.facilities && (
+                <div className="rc-facilities">
+                  <div className="rc-facilities-title">Fasilitas</div>
+                  <div className="rc-facilities-list">
+                    {r.facilities.map(f => (
+                      <span className="rc-facility-tag" key={f}>{f}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
               <div className="rc-price">{rupiah(r.price)} / jam</div>
               <button className="btn-outline" style={{marginTop:8}} onClick={() => onSelect(r)}>Pilih Ruangan</button>
             </div>
