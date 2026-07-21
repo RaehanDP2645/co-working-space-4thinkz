@@ -45,12 +45,12 @@ export default function AdminTopbar({
             <span className="admin-topbar-badge-count">{mockNotifications.length}</span>
           </button>
 
-          {notifDropdownOpen && (
+           {notifDropdownOpen && (
             <div style={{
               position: 'absolute',
               right: 0,
               top: '44px',
-              width: '290px',
+              width: 'min(290px, 86vw)',
               background: '#ffffff',
               border: '1px solid #f0f0f0',
               borderRadius: '16px',
@@ -61,8 +61,15 @@ export default function AdminTopbar({
               gap: '12px',
               zIndex: 110
             }}>
-              <div style={{ fontWeight: 700, fontSize: '14px', borderBottom: '1px solid #f0f0f0', paddingBottom: '8px', color: '#1b231e', display: 'flex', justifyContent: 'between', alignItems: 'center' }}>
+              <div style={{ fontWeight: 700, fontSize: '14px', borderBottom: '1px solid #f0f0f0', paddingBottom: '8px', color: '#1b231e', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span>Notifikasi</span>
+                <button
+                  onClick={() => setNotifDropdownOpen(false)}
+                  aria-label="Tutup"
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9aa39c', fontSize: '18px', lineHeight: 1, padding: '2px 4px' }}
+                >
+                  ×
+                </button>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 {mockNotifications.map(n => (

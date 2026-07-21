@@ -3,15 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use App\Models\Ruangan;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\RuanganRequest;
+use App\Http\Resources\RuanganResource;
 
 class RuanganController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $ruangan = Ruangan::with('fasilitas')
@@ -19,12 +18,12 @@ class RuanganController extends Controller
             ->get();
 
 
-        return response()->json($ruangan);
+        return response()->json([
+            'message' => 'Daftar ruangan berhasil diambil.',
+            'data' => RuanganResource::collection($ruangan),
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
@@ -33,52 +32,38 @@ class RuanganController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(RuanganRequest $request)
     {
-        $validated = $request->validate([
-            'nama_ruangan' => 'required|string|max:100',
+        $data = $request->validated();
+        $fasilitas = $data['fasilitas'] ?? [];
+        unset($data['fasilitas']);
 
-            'jenis_ruangan' => 'required',
-
-            'kapasitas' => 'required|integer',
-
-            'harga_per_jam' => 'required|numeric',
-
-            'gambar' => 'nullable|image|max:2048',
-
-            'deskripsi' => 'nullable|string',
-
-            'tingkat_privasi' => 'required',
-
-            'mendukung_presentasi' => 'boolean',
-
-            'mendukung_event' => 'boolean',
-        ]);
-
-        // Upload gambar
+        // Upload gambar (file lokal) ATAU gunakan URL internet
         if ($request->hasFile('gambar')) {
-
-            $validated['gambar'] =
-                $request->file('gambar')
+            $data['gambar'] = $request->file('gambar')
                 ->store('ruangan', 'public');
-
+        } elseif ($request->filled('gambar_url')) {
+            $data['gambar'] = $request->input('gambar_url');
+        } else {
+            unset($data['gambar']);
         }
 
-        Ruangan::create($validated);
+        $ruangan = Ruangan::create($data);
+        $ruangan->fasilitas()->sync($fasilitas);
 
         return response()->json([
-            'message'=>'Ruangan berhasil dibuat'
-        ]);
+            'message' => 'Ruangan berhasil dibuat.',
+            'data' => new RuanganResource($ruangan->load('fasilitas')),
+        ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Ruangan $ruangan)
+    
+    public function show(Ruangan $ruangan): JsonResponse
     {
-        return response()->json(
-            $ruangan->load('fasilitas')
-        );
+        return response()->json([
+            'message' => 'Detail ruangan berhasil diambil.',
+            'data' => new RuanganResource($ruangan->load('fasilitas')),
+        ]);
     }
 
     /**
@@ -89,58 +74,45 @@ class RuanganController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Ruangan $ruangan)
+    
+    public function update(RuanganRequest $request, Ruangan $ruangan): JsonResponse
     {
-        $validated = $request->validate([
-            'nama_ruangan' => 'required|string|max:100',
-
-            'jenis_ruangan' => 'required',
-
-            'kapasitas' => 'required|integer',
-
-            'harga_per_jam' => 'required|numeric',
-
-            'gambar' => 'nullable|image|max:2048',
-
-            'deskripsi' => 'nullable|string',
-
-            'tingkat_privasi' => 'required',
-
-            'mendukung_presentasi' => 'boolean',
-
-            'mendukung_event' => 'boolean',
-        ]);
+        $data = $request->validated();
+        $fasilitas = $data['fasilitas'] ?? [];
+        unset($data['fasilitas']);
 
         if ($request->hasFile('gambar')) {
 
             // hapus gambar lama
-            if ($ruangan->gambar) {
-
+            if ($ruangan->gambar && !filter_var($ruangan->gambar, FILTER_VALIDATE_URL)) {
                 Storage::disk('public')
                     ->delete($ruangan->gambar);
-
             }
 
             // simpan gambar baru
-            $validated['gambar'] =
+            $data['gambar'] =
                 $request->file('gambar')
                 ->store('ruangan','public');
+        } elseif ($request->filled('gambar_url')) {
+            if ($ruangan->gambar && !filter_var($ruangan->gambar, FILTER_VALIDATE_URL)) {
+                Storage::disk('public')
+                    ->delete($ruangan->gambar);
+            }
+            $data['gambar'] = $request->input('gambar_url');
+        } else {
+            unset($data['gambar']);
         }
 
-        $ruangan->update($validated);
+        $ruangan->update($data);
+        $ruangan->fasilitas()->sync($fasilitas);
 
         return response()->json([
-            'message'=>'Ruangan berhasil diperbarui'
+            'message' => 'Ruangan berhasil diperbarui.',
+            'data' => new RuanganResource($ruangan->load('fasilitas')),
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Ruangan $ruangan)
+    public function destroy(Ruangan $ruangan): JsonResponse
     {
         if($ruangan->gambar){
             Storage::disk('public')

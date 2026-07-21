@@ -15,11 +15,11 @@ class RiwayatPemesananSeeder extends Seeder
     public function run(): void
     {
 
-        $b1 = Pemesanan::where('kode_pemesanan', 'RB-90234')->first();
-        $b2 = Pemesanan::where('kode_pemesanan', 'RB-82741')->first();
-        $b3 = Pemesanan::where('kode_pemesanan', 'RB-12345')->first();
-        $b4 = Pemesanan::where('kode_pemesanan', 'RB-45678')->first();
-        $b5 = Pemesanan::where('kode_pemesanan', 'RB-98765')->first();
+        $b1 = Pemesanan::where('kode_pemesanan', 'RB-MRB001')->first();
+        $b2 = Pemesanan::where('kode_pemesanan', 'RB-ES001')->first();
+        $b3 = Pemesanan::where('kode_pemesanan', 'RB-MRB002')->first();
+        $b4 = Pemesanan::where('kode_pemesanan', 'RB-PR001')->first();
+        $b5 = Pemesanan::where('kode_pemesanan', 'RB-OS001')->first();
 
 
 

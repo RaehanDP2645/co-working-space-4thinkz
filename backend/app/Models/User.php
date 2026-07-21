@@ -2,16 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-
-#[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'remember_token'])]
 
 class User extends Authenticatable
 {
@@ -25,6 +20,7 @@ class User extends Authenticatable
         'email',
         'password',
         'no_telepon',
+        'avatar',
         'google_id',
         'role',
         'status',
@@ -53,5 +49,17 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->role === self::ROLE_ADMIN;
+    }
+
+    public function getAvatarUrlAttribute()
+    {
+        if (! $this->avatar) return null;
+        if (str_starts_with($this->avatar, '#')) {
+            return $this->avatar;
+        }
+        if (preg_match('/^https?:\/\//', $this->avatar) || str_starts_with($this->avatar, 'data:')) {
+            return $this->avatar;
+        }
+        return asset('storage/'.$this->avatar);
     }
 }

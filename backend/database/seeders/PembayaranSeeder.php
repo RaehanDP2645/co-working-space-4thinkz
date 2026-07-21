@@ -21,23 +21,23 @@ class PembayaranSeeder extends Seeder
         $dewi = User::where('email', 'dewi@mail.com')->first();
 
 
-        $b1 = Pemesanan::where('kode_pemesanan', 'RB-90234')->first();
-        $b2 = Pemesanan::where('kode_pemesanan', 'RB-82741')->first();
-        $b3 = Pemesanan::where('kode_pemesanan', 'RB-12345')->first();
-        $b4 = Pemesanan::where('kode_pemesanan', 'RB-98765')->first();
+        $b1 = Pemesanan::where('kode_pemesanan', 'RB-MRB001')->first();
+        $b2 = Pemesanan::where('kode_pemesanan', 'RB-ES001')->first();
+        $b3 = Pemesanan::where('kode_pemesanan', 'RB-MRB002')->first();
+        $b4 = Pemesanan::where('kode_pemesanan', 'RB-PR001')->first();
 
 
 
         $pembayaran = [
 
             [
-                'kode_invoice' => 'INV-90234',
+                'kode_invoice' => 'INV-MRB001',
 
                 'pemesanan_id' => $b1->id,
 
                 'jumlah_bayar' => 300000,
 
-                'metode_pembayaran' => 'transfer_bank',
+                'metode_pembayaran' => 'qris',
 
                 'status' => 'paid',
 
@@ -46,13 +46,13 @@ class PembayaranSeeder extends Seeder
 
 
             [
-                'kode_invoice' => 'INV-82741',
+                'kode_invoice' => 'INV-ES001',
 
                 'pemesanan_id' => $b2->id,
 
                 'jumlah_bayar' => 500000,
 
-                'metode_pembayaran' => 'ewallet',
+                'metode_pembayaran' => 'qris',
 
                 'status' => 'pending',
 
@@ -61,13 +61,13 @@ class PembayaranSeeder extends Seeder
 
 
             [
-                'kode_invoice' => 'INV-12345',
+                'kode_invoice' => 'INV-MRB002',
 
                 'pemesanan_id' => $b3->id,
 
                 'jumlah_bayar' => 250000,
 
-                'metode_pembayaran' => 'credit_card',
+                'metode_pembayaran' => 'qris',
 
                 'status' => 'paid',
 
@@ -76,13 +76,13 @@ class PembayaranSeeder extends Seeder
 
 
             [
-                'kode_invoice' => 'INV-98765',
+                'kode_invoice' => 'INV-PR001',
 
                 'pemesanan_id' => $b4->id,
 
                 'jumlah_bayar' => 400000,
 
-                'metode_pembayaran' => 'transfer_bank',
+                'metode_pembayaran' => 'qris',
 
                 'status' => 'refund',
 

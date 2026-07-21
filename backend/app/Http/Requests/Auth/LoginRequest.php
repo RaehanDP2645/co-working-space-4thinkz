@@ -45,8 +45,13 @@ class LoginRequest extends FormRequest
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
+            $exists = \App\Models\User::where('email', $this->input('email'))->exists();
+            $message = $exists
+                ? 'email/password salah'
+                : 'tidak ditemukan user';
+
             throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
+                'email' => $message,
             ]);
         }
 

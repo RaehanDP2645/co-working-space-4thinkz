@@ -6,54 +6,47 @@ export default function AdminDashboard({
   rooms, 
   customers, 
   payments, 
+  stats,
   onViewBookingDetail 
 }) {
-  // Statistics Calculations
-  const totalCustomers = customers.length;
-  const totalRooms = rooms.length;
+  // Statistics Calculations (backend)
+  const totalCustomers = stats ? stats.totalCustomers : customers.length;
+  const totalRooms = stats ? stats.totalRooms : rooms.length;
   
-  const todayStr = "29 Jun 2026"; // Mocking today's date context
+  const bookingsToday = stats ? stats.bookingsToday : bookings.filter(b => b.status === 'pending' || b.status === 'unpaid').length;
+  const bookingsPending = stats ? stats.bookingsPending : bookings.filter(b => b.status === 'pending' || b.status === 'unpaid').length;
+  const bookingsCompleted = stats ? stats.bookingsCompleted : bookings.filter(b => b.status === 'completed').length;
   
-  const bookingsToday = bookings.filter(b => b.date.includes("29 Jun") || b.date.includes("Hari Ini")).length;
-  const bookingsPending = bookings.filter(b => b.status === 'Pending' || b.status === 'unpaid').length;
-  const bookingsCompleted = bookings.filter(b => b.status === 'Completed' || b.status === 'Completed').length;
-  
-  // Revenue
-  const revenueToday = payments
-    .filter(p => p.status === 'Paid' && (p.date === todayStr || p.date === 'Hari Ini'))
-    .reduce((sum, p) => sum + p.amount, 0);
-    
-  const revenueThisMonth = payments
-    .filter(p => p.status === 'Paid')
-    .reduce((sum, p) => sum + p.amount, 0);
-    
-  const activeRoomsCount = bookings.filter(b => b.status === 'Confirmed' || b.status === 'Paid').length; // occupied rooms
+  const revenueToday = stats ? stats.revenueToday : payments.filter(p => p.status === 'paid').reduce((sum, p) => sum + p.amount, 0);
+  const revenueThisMonth = stats ? stats.revenueMonth : payments.filter(p => p.status === 'paid').reduce((sum, p) => sum + p.amount, 0);
+  const activeRoomsCount = stats ? stats.activeRooms : bookings.filter(b => b.status === 'confirmed' || b.status === 'paid').length;
 
-  // Mock weekly data for booking graph
-  const weeklyBookings = [
-    { day: "Senin", count: 8 },
-    { day: "Selasa", count: 15 },
-    { day: "Rabu", count: 12 },
-    { day: "Kamis", count: 22 },
-    { day: "Jumat", count: 18 },
-    { day: "Sabtu", count: 29 },
-    { day: "Minggu", count: 25 }
-  ];
-  const maxWeeklyCount = Math.max(...weeklyBookings.map(d => d.count));
+  // Data realtime dari backend (7 hari terakhir)
+  const weeklyBookings = (stats && stats.weeklyBookings && stats.weeklyBookings.length)
+    ? stats.weeklyBookings.map(d => ({ day: d.label, count: d.count }))
+    : [
+        { day: "Sen", count: 0 },{ day: "Sel", count: 0 },{ day: "Rab", count: 0 },
+        { day: "Kam", count: 0 },{ day: "Jum", count: 0 },{ day: "Sab", count: 0 },{ day: "Min", count: 0 },
+      ];
+  const maxWeeklyCount = Math.max(1, ...weeklyBookings.map(d => d.count));
 
-  // Mock monthly data for revenue graph
-  const monthlyRevenue = [
-    { month: "Jan", amt: 12500000 },
-    { month: "Feb", amt: 14800000 },
-    { month: "Mar", amt: 18200000 },
-    { month: "Apr", amt: 22000000 },
-    { month: "Mei", amt: 29500000 },
-    { month: "Jun", amt: revenueThisMonth }
-  ];
-  const maxMonthlyRevenue = Math.max(...monthlyRevenue.map(m => m.amt));
+  // Data realtime dari backend (6 bulan terakhir)
+  const monthlyRevenue = (stats && stats.monthlyRevenue && stats.monthlyRevenue.length)
+    ? stats.monthlyRevenue.map(m => ({ month: m.label, amt: m.amount }))
+    : [{ month: "—", amt: 0 }];
+  const maxMonthlyRevenue = Math.max(1, ...monthlyRevenue.map(m => m.amt));
 
   // Recent Bookings (top 5)
-  const recentBookings = bookings.slice(0, 5);
+  const recentBookings = stats && stats.recentBookings
+    ? stats.recentBookings.map(b => ({
+        id: b.id,
+        code: b.code,
+        customerName: b.customerName,
+        room: { name: b.room.name },
+        date: b.date,
+        status: b.status,
+      }))
+    : bookings.slice(0, 5);
 
   const getStatusBadge = (status) => {
     switch (status.toLowerCase()) {
@@ -138,7 +131,7 @@ export default function AdminDashboard({
             <span style={{ fontSize: '20px' }}>💰</span>
           </div>
           <div className="sv" style={{ fontSize: '18px' }}>{rupiah(revenueThisMonth)}</div>
-          <span style={{ fontSize: '11px', color: 'var(--green-700)', fontWeight: 600 }}>Akumulasi bulan Juni</span>
+          <span style={{ fontSize: '11px', color: 'var(--green-700)', fontWeight: 600 }}>Akumulasi bulan ini</span>
         </div>
         <div className="stat-card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>

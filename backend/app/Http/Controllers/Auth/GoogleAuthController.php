@@ -19,7 +19,9 @@ class GoogleAuthController extends Controller
      */
     public function redirect(): RedirectResponse
     {
-        return Socialite::driver('google')->stateless()->redirect();
+        return Socialite::driver('google')
+        ->stateless()
+        ->redirect();
     }
 
     /**
@@ -28,7 +30,9 @@ class GoogleAuthController extends Controller
     public function callback(): RedirectResponse
     {
         try {
-            $googleUser = Socialite::driver('google')->stateless()->user();
+            $googleUser = Socialite::driver('google')
+            ->stateless()
+            ->user();
         } catch (\Throwable $e) {
             return redirect(config('app.frontend_url').'/login?error=google_auth_failed');
         }
@@ -44,7 +48,7 @@ class GoogleAuthController extends Controller
             }
         } else {
             $user = User::create([
-                'nama' => $googleUser->getName(),
+                'name' => $googleUser->getName(),
                 'email' => $googleUser->getEmail(),
                 'google_id' => $googleUser->getId(),
                 'password' => Hash::make(Str::random(24)),

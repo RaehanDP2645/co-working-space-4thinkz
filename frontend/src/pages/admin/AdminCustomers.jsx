@@ -17,11 +17,20 @@ export default function AdminCustomers({
       : true;
   });
 
-  const getCustomerStats = (email) => {
-    const customerBookings = bookings.filter(b => b.customerEmail === email);
+  const getCustomerStats = (c) => {
+    // pakai data dari backend (sudah realtime DB)
+    if (c.totalSpent !== undefined || c.bookings) {
+      return {
+        bookingCount: c.bookingCount ?? (c.bookings ? c.bookings.length : 0),
+        totalSpent: c.totalSpent ?? 0,
+        bookingList: c.bookings ?? [],
+      };
+    }
+    // fallback hitung dari props (jika field tidak ada)
+    const customerBookings = bookings.filter(b => b.customerEmail === email || b.code === c.code);
     const totalTransactions = payments
-      .filter(p => p.customerEmail === email && p.status === 'Paid')
-      .reduce((sum, p) => sum + p.amount, 0);
+      .filter(p => (p.customerEmail === c.email || p.bookingCode === c.code) && p.status === 'Paid')
+      .reduce((sum, p) => sum + (p.amount || 0), 0);
 
     return {
       bookingCount: customerBookings.length,
@@ -83,7 +92,7 @@ export default function AdminCustomers({
                 </tr>
               ) : (
                 filteredCustomers.map((c) => {
-                  const stats = getCustomerStats(c.email);
+                  const stats = getCustomerStats(c);
                   return (
                     <tr key={c.id} style={{ borderBottom: '1px solid var(--line)', fontSize: '13.5px' }}>
                       <td style={{ padding: '14px 8px', fontWeight: 600 }}>{c.name}</td>

@@ -6,9 +6,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class RuanganRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
@@ -17,15 +14,21 @@ class RuanganRequest extends FormRequest
     public function rules(): array
     {
         $isUpdate = $this->isMethod('put') || $this->isMethod('patch');
+        $required = $isUpdate ? 'sometimes' : 'required';
 
         return [
-            'nama_ruangan' => [$isUpdate ? 'sometimes' : 'required','string','max:100'],
-            'jenis_ruangan' => [$isUpdate ? 'sometimes' : 'required','string','in:Meeting Room,Private Office,Hot Desk,Event Space'],
-            'kapasitas' => [$isUpdate ? 'sometimes' : 'required','integer','min:1'],
-            'harga' => [$isUpdate ? 'sometimes' : 'required','numeric','min:0'],
-            'tingkat_privasi' => ['nullable','in:rendah,sedang,tinggi'],
-            'mendukung_presentasi' => ['nullable','boolean'],
-            'status' => ['nullable', 'in:tersedia,perbaikan,nonaktif'],
+            'nama_ruangan' => [$required, 'string', 'max:100'],
+            'jenis_ruangan' => [$required, 'string', 'in:Meeting Room,Private Office,Open Space,Event Space'],
+            'kapasitas' => [$required, 'integer', 'min:1'],
+            'harga_per_jam' => [$required, 'numeric', 'min:0'],
+            'gambar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            'gambar_url' => ['nullable', 'string', 'url', 'max:1000'],
+            'deskripsi' => ['nullable', 'string'],
+            'tingkat_privasi' => ['nullable', 'in:publik,semi_private,private'],
+            'mendukung_presentasi' => ['nullable', 'boolean'],
+            'mendukung_event' => ['nullable', 'boolean'],
+            'fasilitas' => ['nullable', 'array'],
+            'fasilitas.*' => ['integer', 'exists:fasilitas,id'],
         ];
     }
 }

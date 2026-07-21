@@ -1,14 +1,25 @@
 import React, { useState } from 'react';
-import { ROOMS, rupiah } from '../constants';
-import { IconInfo } from '../components/Icons';
+import { rupiah } from '../constants';
+import { IconInfo, IconSparkles } from '../components/Icons';
+import AIRecommendations from '../components/AIRecommendations';
 
-export default function RoomsPage({ onSelect }) {
+export default function RoomsPage({ onSelect, rooms }) {
   const [query, setQuery] = useState("");
-  const filtered = ROOMS.filter(r => r.name.toLowerCase().includes(query.toLowerCase()));
+  const list = rooms && rooms.length ? rooms : [];
+  const filtered = list.filter(r => r.name.toLowerCase().includes(query.toLowerCase()));
   return (
     <div className="page-pad">
       <h2 style={{marginTop:0}}>Pilih Ruangan</h2>
       <p style={{color:"var(--ink-soft)", marginTop:-6, marginBottom:22, fontSize:13.5}}>Pilih ruangan yang sesuai dengan kebutuhan Anda</p>
+
+      <div className="ai-rec-wrap">
+        <div className="ai-rec-banner">
+          <span className="ai-rec-banner-ic"><IconSparkles size={16} /></span>
+          Coba <b>Rekomendasi AI</b> untuk menemukan ruangan terbaik secara otomatis
+        </div>
+        <AIRecommendations onSelect={onSelect} />
+      </div>
+
 
       <div className="toolbar">
         <input className="search-input" placeholder="Cari ruangan..." value={query} onChange={e=>setQuery(e.target.value)} />
@@ -36,5 +47,3 @@ export default function RoomsPage({ onSelect }) {
     </div>
   );
 }
-
-

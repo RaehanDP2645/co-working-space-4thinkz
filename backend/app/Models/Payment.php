@@ -13,6 +13,7 @@ class Payment extends Model
     protected $table = 'pembayaran';
 
     public const STATUS_BELUM_LUNAS = 'belum_lunas';
+    public const STATUS_PENDING = 'pending';
     public const STATUS_PAID = 'paid';
     public const STATUS_GAGAL = 'failed';
     public const STATUS_REFUND = 'refund';
@@ -22,8 +23,13 @@ class Payment extends Model
         'pemesanan_id',
         'jumlah_bayar',
         'metode_pembayaran',
+        'payment_type',
         'status',
         'waktu_pembayaran',
+        'paywuzz_order_id',
+        'paywuzz_trx_id',
+        'payment_url',
+        'paywuzz_response',
     ];
 
     protected $casts = [

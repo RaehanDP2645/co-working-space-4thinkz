@@ -4,17 +4,27 @@ export default function AdminLoginScreen({ onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const handleAdminSubmit = (e) => {
+  const handleAdminSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) {
       setError('Email dan password wajib diisi.');
       return;
     }
-    if (email === 'admin@ruangkita.com' && password === 'admin123') {
-      setError('');
-      onLogin(true);
-    } else {
-      setError('Email atau password admin salah. (Gunakan admin@ruangkita.com / admin123)');
+    setError('');
+    try {
+      const res = await fetch('http://localhost:8000/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.message || 'Login gagal.');
+        return;
+      }
+      onLogin({ token: data.token, email, password, name: data.user.name });
+    } catch (err) {
+      setError('Terjadi kesalahan koneksi.');
     }
   };
   return (

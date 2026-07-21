@@ -14,13 +14,14 @@ class Pemesanan extends Model
 
     protected $table = 'pemesanan';
 
-    public const STATUS_MENUNGGU = 'menunggu';
-    public const STATUS_DIBAYAR = 'dibayar';
-    public const STATUS_DIKONFIRMASI = 'dikonfirmasi';
-    public const STATUS_SELESAI = 'selesai';
-    public const STATUS_DIBATALKAN = 'dibatalkan';
+    public const STATUS_MENUNGGU = 'pending';
+    public const STATUS_DIBAYAR = 'paid';
+    public const STATUS_DIKONFIRMASI = 'confirmed';
+    public const STATUS_SELESAI = 'completed';
+    public const STATUS_DIBATALKAN = 'cancelled';
 
     protected $fillable = [
+        'kode_pemesanan',
         'user_id',
         'ruangan_id',
         'waktu_mulai',
@@ -28,12 +29,14 @@ class Pemesanan extends Model
         'jumlah_orang',
         'status',
         'total_biaya',
+        'batas_pembayaran',
     ];
 
     protected $casts = [
         'waktu_mulai' => 'datetime',
         'waktu_selesai' => 'datetime',
         'total_biaya' => 'decimal:2',
+        'batas_pembayaran' => 'datetime',
     ];
 
     public function user(): BelongsTo

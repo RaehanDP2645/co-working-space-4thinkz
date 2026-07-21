@@ -11,6 +11,9 @@ export default function PaymentDone({ onBackHome }) {
       <p style={{color:"var(--ink-soft)", maxWidth:420, margin:"0 auto 24px"}}>
         Reservasi Anda menunggu pembayaran. Silakan selesaikan pembayaran melalui menu Pembayaran.
       </p>
+      <p style={{color:"var(--ink-soft)", maxWidth:420, margin:"0 auto 24px", fontSize:13}}>
+        Tersedia opsi pembayaran <strong>Lunas</strong> atau <strong>DP 50%</strong> via QRIS.
+      </p>
       <button className="btn-primary" onClick={onBackHome}>Kembali ke Dashboard</button>
     </div>
   );

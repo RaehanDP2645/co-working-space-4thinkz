@@ -1,7 +1,44 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { GoogleIcon, IconLogo, IconCalendar, IconFileText, IconBell } from '../components/Icons';
 
-export default function LoginScreen({ onLogin }) {
+export default function LoginScreen({ onLogin, onSwitchToRegister }) {
+  const [form, setForm] = useState({ email: '', password: '' });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleLocalLogin = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+    try {
+      const res = await fetch('http://localhost:8000/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message || 'Login gagal');
+      }
+      const key = window.location.pathname.startsWith('/admin') ? 'token_admin' : 'token_user';
+      localStorage.setItem(key, data.token);
+      try {
+        await onLogin({ token: data.token, email: form.email, password: form.password });
+      } catch (loginErr) {
+        localStorage.removeItem(key);
+        setError(loginErr.message);
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = () => {
+    window.location.href = 'http://localhost:8000/api/auth/google/redirect';
+  };
+
   return (
     <div className="login-screen">
       <div className="login-card">
@@ -16,40 +53,28 @@ export default function LoginScreen({ onLogin }) {
           Login untuk melanjutkan reservasi ruangan
         </p>
 
-        <button className="btn-google" onClick={() => onLogin(false)} style={{ marginBottom: '24px' }}>
-          <GoogleIcon /> Daftar / Login dengan Google
+        <form onSubmit={handleLocalLogin} style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 16 }}>
+          <input className="search-input" type="email" placeholder="Email" value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })} required />
+          <input className="search-input" type="password" placeholder="Password" value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })} required />
+          {error && <div style={{ color: '#C03A26', fontSize: 12 }}>{error}</div>}
+          <button className="btn-primary" type="submit" disabled={loading}>
+            {loading ? 'Memproses...' : 'Masuk dengan Email'}
+          </button>
+        </form>
+
+        <div className="divider">atau</div>
+
+        <button className="btn-google" type="button" onClick={handleGoogleLogin} style={{ marginBottom: '16px' }}>
+          <GoogleIcon /> Login dengan Google
         </button>
 
-        <div className="divider">Fitur Utama</div>
-
-        <div className="feature-list" style={{ marginBottom: '24px' }}>
-          <div className="feature-item">
-            <div className="dot">
-              <IconCalendar />
-            </div>
-            <div>
-              <div className="ft">Reservasi mudah &amp; cepat</div>
-              <div className="fd">Pesan ruangan dalam hitungan menit</div>
-            </div>
-          </div>
-          <div className="feature-item">
-            <div className="dot">
-              <IconFileText />
-            </div>
-            <div>
-              <div className="ft">Kelola reservasi dengan praktis</div>
-              <div className="fd">Lihat, ubah, atau batalkan reservasi dengan mudah</div>
-            </div>
-          </div>
-          <div className="feature-item">
-            <div className="dot">
-              <IconBell />
-            </div>
-            <div>
-              <div className="ft">Notifikasi real-time</div>
-              <div className="fd">Dapatkan update status reservasi secara langsung</div>
-            </div>
-          </div>
+        <div style={{ textAlign: 'center', fontSize: 13, color: 'var(--ink-soft)' }}>
+          Belum punya akun?{' '}
+          <button type="button" className="link-btn" onClick={onSwitchToRegister} style={{ color: 'var(--green-700)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}>
+            Daftar di sini
+          </button>
         </div>
 
         <div className="login-footnote" style={{ marginTop: '24px' }}>© 2026 RuangKita. All rights reserved.</div>

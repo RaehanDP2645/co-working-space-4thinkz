@@ -17,16 +17,24 @@ export default function AdminRooms({
   const [price, setPrice] = useState('');
   const [facilities, setFacilities] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const [imageFile, setImageFile] = useState(null);
+  const [privasi, setPrivasi] = useState('publik');
   const [status, setStatus] = useState('Aktif');
 
-  const handleOpenAdd = () => {
+  const resetForm = () => {
     setName('');
     setType('Meeting Room');
     setCapacity('');
     setPrice('');
     setFacilities('');
-    setImageUrl('https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=600');
+    setImageUrl('');
+    setImageFile(null);
+    setPrivasi('publik');
     setStatus('Aktif');
+  };
+
+  const handleOpenAdd = () => {
+    resetForm();
     setIsAdding(true);
   };
 
@@ -37,7 +45,9 @@ export default function AdminRooms({
     setCapacity(r.cap || '');
     setPrice(r.price || '');
     setFacilities(r.facilities || 'WiFi, Proyektor, Sound System, Papan Tulis');
-    setImageUrl(r.img || '');
+    setImageUrl(r.img && r.img.startsWith('http') ? r.img : '');
+    setImageFile(null);
+    setPrivasi(r.privasi || 'publik');
     setStatus(r.status || 'Aktif');
   };
 
@@ -52,6 +62,10 @@ export default function AdminRooms({
       price: parseInt(price),
       facilities,
       img: imageUrl || 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=600',
+      privasi,
+      gambar_url: imageFile ? null : (imageUrl || null),
+      gambar_file: imageFile || null,
+      tingkat_privasi: privasi,
       status
     };
 
@@ -256,14 +270,34 @@ export default function AdminRooms({
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '6px' }}>URL Foto Ruangan</label>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '6px' }}>Tingkat Privasi</label>
+                <select 
+                  value={privasi} 
+                  onChange={(e) => setPrivasi(e.target.value)}
+                  style={{ width: '100%', padding: '10px', border: '1px solid var(--line)', borderRadius: '8px' }}
+                >
+                  <option value="publik">Publik</option>
+                  <option value="semi_private">Semi Private</option>
+                  <option value="private">Private</option>
+                </select>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '6px' }}>Foto Ruangan</label>
+                <input 
+                  type="file" 
+                  accept="image/*"
+                  onChange={(e) => setImageFile(e.target.files[0] || null)}
+                  style={{ width: '100%', padding: '8px', border: '1px solid var(--line)', borderRadius: '8px', marginBottom: '8px' }}
+                />
                 <input 
                   type="text" 
                   value={imageUrl} 
+                  placeholder="Atau tempel URL gambar internet"
                   onChange={(e) => setImageUrl(e.target.value)}
                   style={{ width: '100%', padding: '10px', border: '1px solid var(--line)', borderRadius: '8px' }}
                 />
-                <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>* Simulasikan upload foto dengan menempelkan tautan gambar Unsplash.</span>
+                <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>Unggah file lokal atau gunakan URL gambar dari internet.</span>
               </div>
             </div>
 

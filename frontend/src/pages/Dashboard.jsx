@@ -1,7 +1,12 @@
 import React from 'react';
-import { ROOMS } from '../constants';
+
 import { IconBuilding, IconCalendar, IconClock, IconBookOpen, IconClose, IconLightbulb } from '../components/Icons';
-export default function Dashboard({ user, goToRooms }) {
+export default function Dashboard({ user, goToRooms, onViewDetail, reservations = [], rooms = [], showToast }) {
+  const active = reservations.filter(r => ["pending","paid","confirmed","completed","cancelled","partial","pending_payment","unpaid"].includes(r.status));
+  const waiting = reservations.filter(r => r.status === "pending" || r.status === "unpaid" || r.status === "pending_payment").length;
+  const done = reservations.filter(r => r.status === "completed").length;
+  const cancelled = reservations.filter(r => r.status === "cancelled").length;
+  const latest = reservations[0];
   return (
     <div className="page-pad">
       <div className="welcome-banner">
@@ -14,24 +19,39 @@ export default function Dashboard({ user, goToRooms }) {
         </div>
       </div>
       <div className="stat-grid">
-        <StatCard icon={<IconCalendar />} color="#EDE7FB" iconColor="#6D4FD6" value="3" label="Reservasi Aktif" desc="Anda memiliki 3 reservasi aktif" />
-        <StatCard icon={<IconClock />} color="#FDF1D6" iconColor="#9A6A00" value="1" label="Menunggu Pembayaran" desc="Selesaikan pembayaran Anda" />
-        <StatCard icon={<IconBookOpen />} color="#E4F0E7" iconColor="#1F6B45" value="8" label="Riwayat Selesai" desc="Total reservasi selesai" />
-        <StatCard icon={<IconClose />} color="#FBE4E0" iconColor="#C03A26" value="2" label="Dibatalkan" desc="Reservasi dibatalkan" />
+        <StatCard icon={<IconCalendar />} color="#EDE7FB" iconColor="#6D4FD6" value={String(active.length)} label="Reservasi Aktif" desc="Anda memiliki 3 reservasi aktif" />
+        <StatCard icon={<IconClock />} color="#FDF1D6" iconColor="#9A6A00" value={String(waiting)} label="Menunggu Pembayaran" desc="Selesaikan pembayaran Anda" />
+        <StatCard icon={<IconBookOpen />} color="#E4F0E7" iconColor="#1F6B45" value={String(done)} label="Riwayat Selesai" desc="Total reservasi selesai" />
+        <StatCard icon={<IconClose />} color="#FBE4E0" iconColor="#C03A26" value={String(cancelled)} label="Dibatalkan" desc="Reservasi dibatalkan" />
       </div>
       <div className="two-col">
         <div className="panel">
           <div className="section-title">Reservasi Terbaru</div>
-          <div className="recent-item">
-            <img src={ROOMS[0].img} alt="" />
-            <div style={{flex:1}}>
-              <div className="ri-name">Ruang Meeting A</div>
-              <div className="ri-meta">📅 24 Mei 2024 · 09.00 - 11.00 · Kapasitas: 10 Orang</div>
+          {latest ? (
+            <div className="recent-item">
+              <img src={latest.room?.img} alt="" />
+              <div style={{flex:1}}>
+                <div className="ri-name">{latest.room?.name}</div>
+                <div className="ri-meta">📅 {latest.date} · {latest.time} · Kapasitas: {latest.room?.cap} Orang</div>
+              </div>
+              <span className={"badge " + (latest.status === 'paid' || latest.status === 'completed' ? 'ok' : 'warn')}>
+                {latest.status === 'paid' || latest.status === 'completed' ? 'Lunas' : latest.status === 'cancelled' ? 'Dibatalkan' : 'Menunggu Pembayaran'}
+              </span>
             </div>
-            <span className="badge warn">Menunggu Pembayaran</span>
-          </div>
+          ) : (
+            <div className="recent-item">
+              <div style={{flex:1}}>
+                <div className="ri-name">Belum ada reservasi</div>
+                <div className="ri-meta">Silakan pesan ruangan.</div>
+              </div>
+            </div>
+          )}
           <div style={{textAlign:"right", marginTop:12}}>
-            <button className="btn-outline" onClick={goToRooms}>Lihat Detail</button>
+            {reservations.length === 0 ? (
+              <button className="btn-primary" onClick={() => { if (showToast) showToast('info', 'Mulai buat reservasi ruangan Anda.'); goToRooms(); }}>Buat Reservasi</button>
+            ) : (
+              <button className="btn-outline" onClick={() => onViewDetail && onViewDetail(latest)}>Lihat Detail</button>
+            )}
           </div>
         </div>
         <div className="panel" style={{background:"#FAFCF8", display:"flex", flexDirection:"column", gap:10}}>
