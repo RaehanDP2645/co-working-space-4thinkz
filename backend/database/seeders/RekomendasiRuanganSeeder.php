@@ -25,7 +25,7 @@ class RekomendasiRuanganSeeder extends Seeder
 
 
 
-        // mengambil ruangan
+        // mengambil ruangana
         $meetingA = Ruangan::where('nama_ruangan', 'Meeting Room A')->first();
         $meetingB = Ruangan::where('nama_ruangan', 'Meeting Room B')->first();
         $private  = Ruangan::where('nama_ruangan', 'Private Office')->first();

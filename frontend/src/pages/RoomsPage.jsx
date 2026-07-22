@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { rupiah } from '../constants';
-import { IconInfo, IconSparkles } from '../components/Icons';
-import AIRecommendations from '../components/AIRecommendations';
+import { IconInfo } from '../components/Icons';
 
-export default function RoomsPage({ onSelect, rooms }) {
+export default function RoomsPage({ onSelect, rooms, onGoRecommendation }) {
   const [query, setQuery] = useState("");
   const list = rooms && rooms.length ? rooms : [];
   const filtered = list.filter(r => r.name.toLowerCase().includes(query.toLowerCase()));
@@ -12,14 +11,9 @@ export default function RoomsPage({ onSelect, rooms }) {
       <h2 style={{marginTop:0}}>Pilih Ruangan</h2>
       <p style={{color:"var(--ink-soft)", marginTop:-6, marginBottom:22, fontSize:13.5}}>Pilih ruangan yang sesuai dengan kebutuhan Anda</p>
 
-      <div className="ai-rec-wrap">
-        <div className="ai-rec-banner">
-          <span className="ai-rec-banner-ic"><IconSparkles size={16} /></span>
-          Coba <b>Rekomendasi AI</b> untuk menemukan ruangan terbaik secara otomatis
-        </div>
-        <AIRecommendations onSelect={onSelect} />
+      <div style={{ display: 'flex', gap: 8, marginBottom: 18 }}>
+        <button className="btn-primary" style={{ fontSize: 13 }} onClick={onGoRecommendation}>Rekomendasi AI</button>
       </div>
-
 
       <div className="toolbar">
         <input className="search-input" placeholder="Cari ruangan..." value={query} onChange={e=>setQuery(e.target.value)} />

@@ -108,4 +108,19 @@ export const api = {
     method: 'PUT',
     body: JSON.stringify({ status: 'Nonaktif' }),
   }).then(r => r.data),
+
+  // rekomendasi (expert system)
+  getRecommendations: (payload) => request('/rekomendasi', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }),
+
+  // asisten AI (OpenClaw)
+  chatAssistant: (message, conversationHistory = []) => request('/assistant/chat', {
+    method: 'POST',
+    body: JSON.stringify({
+      message,
+      conversation_history: conversationHistory,
+    }),
+  }).then(r => r.reply),
 };

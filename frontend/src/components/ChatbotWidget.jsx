@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { IconChat, IconClose, IconSend, IconSparkles } from './Icons';
-import { getAIResponse, getBasePrompt, getSuggestions } from '../utils/aiEngine';
+import { getBasePrompt, getSuggestions } from '../utils/aiEngine';
+import { api } from '../services/api';
+
+const FALLBACK_ERROR = 'Maaf, Asisten AI sedang tidak tersedia. Silakan coba beberapa saat lagi.';
 
 export default function ChatbotWidget({ rooms, reservations, onPickRoom }) {
   const [open, setOpen] = useState(false);
@@ -9,6 +12,7 @@ export default function ChatbotWidget({ rooms, reservations, onPickRoom }) {
     { from: 'bot', text: getBasePrompt() },
   ]);
   const [typing, setTyping] = useState(false);
+  const [sending, setSending] = useState(false);
   const [suggestions] = useState(getSuggestions());
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
@@ -23,21 +27,40 @@ export default function ChatbotWidget({ rooms, reservations, onPickRoom }) {
     if (open && inputRef.current) inputRef.current.focus();
   }, [open]);
 
-  const send = (text) => {
+  const send = async (text) => {
     const value = (text ?? input).trim();
-    if (!value) return;
+    if (!value || sending) return;
 
     const userMsg = { from: 'user', text: value };
     setMessages((prev) => [...prev, userMsg]);
     setInput('');
     setTyping(true);
+    setSending(true);
 
-    // Simulate "thinking" delay for a more natural feel
-    setTimeout(() => {
-      const reply = getAIResponse(value, { rooms, reservations });
-      setTyping(false);
+    try {
+      const conversationHistory = messages
+        .filter((m) => m.from === 'user' || m.from === 'bot')
+        .slice(-10)
+        .map((m) => ({
+          role: m.from === 'user' ? 'user' : 'assistant',
+          content: m.text,
+        }));
+
+      const reply = await api.chatAssistant(value, conversationHistory);
       setMessages((prev) => [...prev, { from: 'bot', text: reply }]);
-    }, 500);
+    } catch {
+      setMessages((prev) => [...prev, { from: 'bot', text: FALLBACK_ERROR }]);
+    } finally {
+      setTyping(false);
+      setSending(false);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      send();
+    }
   };
 
   return (
@@ -104,9 +127,15 @@ export default function ChatbotWidget({ rooms, reservations, onPickRoom }) {
               placeholder="Tanya asisten AI..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && send()}
+              onKeyDown={handleKeyDown}
+              disabled={sending}
             />
-            <button className="ai-send" onClick={() => send()} aria-label="Kirim">
+            <button
+              className="ai-send"
+              onClick={() => send()}
+              aria-label="Kirim"
+              disabled={sending || !input.trim()}
+            >
               <IconSend size={18} />
             </button>
           </div>

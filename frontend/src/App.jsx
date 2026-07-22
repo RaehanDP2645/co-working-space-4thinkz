@@ -13,7 +13,8 @@ import MyReservationsPage from './pages/MyReservationsPage';
 import PaymentPage from './pages/PaymentPage';
 import HistoryPage from './pages/HistoryPage';
 import ProfilePage from './pages/ProfilePage';
-import { ROOMS, rupiah } from './constants';
+import RecommendationPage from './pages/RecommendationPage';
+import { ROOMS, rupiah, getRoomImg } from './constants';
 import ChatbotWidget from './components/ChatbotWidget';
 import { createTransaction, getTransaction, simulatePayment } from './services/paywuz';
 import { api } from './services/api';
@@ -127,7 +128,7 @@ export default function App() {
     api.getReservations()
       .then(data => setBackendReservations(data.map(b => ({
         id: b.id,
-        room: b.room,
+        room: b.room ? { ...b.room, img: getRoomImg(b.room.name, b.room.img) } : null,
         date: b.date,
         time: b.time,
         status: b.status === 'pending' ? 'unpaid' : b.status,
@@ -142,13 +143,12 @@ export default function App() {
   };
 
   const mapBackendRoom = (r) => {
-    const fallback = ROOMS.find(x => x.name.toLowerCase().includes(r.nama_ruangan.toLowerCase())) || ROOMS[0];
     return {
       id: r.id,
       name: r.nama_ruangan,
       cap: r.kapasitas,
       price: Number(r.harga_per_jam),
-      img: r.gambar_url || (fallback ? fallback.img : ''),
+      img: getRoomImg(r.nama_ruangan, r.gambar_url),
     };
   };
 
@@ -156,6 +156,7 @@ export default function App() {
   const PATH_TO_PAGE = {
     '/': 'dashboard',
     '/ruangan': 'rooms',
+    '/rekomendasi': 'recommendation',
     '/jadwal': 'date',
     '/form': 'form',
     '/selesai': 'done',
@@ -165,7 +166,7 @@ export default function App() {
     '/profil': 'profile',
   };
   const PAGE_TO_PATH = {
-    'dashboard': '/', 'rooms': '/ruangan', 'date': '/jadwal', 'form': '/form',
+    'dashboard': '/', 'rooms': '/ruangan', 'recommendation': '/rekomendasi', 'date': '/jadwal', 'form': '/form',
     'done': '/selesai', 'myres': '/reservasi', 'payment': '/pembayaran',
     'history': '/riwayat', 'profile': '/profil',
   };
@@ -392,7 +393,7 @@ export default function App() {
         type: r.jenis_ruangan,
         cap: r.kapasitas,
         price: Number(r.harga_per_jam),
-        img: r.gambar_url || '',
+        img: getRoomImg(r.nama_ruangan, r.gambar_url),
         privasi: r.tingkat_privasi || 'publik',
         facilities: (r.fasilitas || []).map(f => f.nama_fasilitas || f.nama || '').join(', '),
         status: 'Aktif',
@@ -691,7 +692,9 @@ export default function App() {
       else goPage("myres");
     }} reservations={backendReservations} rooms={backendRooms.map(mapBackendRoom)} showToast={showToast} />;
   } else if (page === "rooms") {
-    content = <RoomsPage onSelect={(r) => { setRoom(r); goPage("date"); }} rooms={backendRooms.map(mapBackendRoom)} />;
+    content = <RoomsPage onSelect={(r) => { setRoom(r); goPage("date"); }} rooms={backendRooms.map(mapBackendRoom)} onGoRecommendation={() => goPage("recommendation")} />;
+  } else if (page === "recommendation") {
+    content = <RecommendationPage onSelect={(r) => { setRoom(r); goPage("date"); }} onBack={() => goPage("rooms")} />;
   } else if (page === "date") {
     content = <DateTimePage room={room} onBack={() => goPage("rooms")} onNext={(s) => { setSchedule(s); goPage("form"); }} />;
   } else if (page === "form") {

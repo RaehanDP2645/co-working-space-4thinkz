@@ -56,9 +56,8 @@ class PemesananController extends Controller
             ->first();
         $num = 1;
         if ($last) {
-            $parts = explode('-', $last->kode_pemesanan);
-            $lastNum = (int) end($parts);
-            $num = $lastNum + 1;
+            $suffix = preg_replace('/^RB-' . preg_quote($prefix, '/') . '/', '', $last->kode_pemesanan);
+            $num = (int) $suffix + 1;
         }
         $kode = "RB-{$prefix}" . str_pad($num, 3, '0', STR_PAD_LEFT);
 

@@ -19,48 +19,46 @@ class GoogleAuthController extends Controller
      */
     public function redirect(): RedirectResponse
     {
-        return Socialite::driver('google')
-        ->stateless()
-        ->redirect();
+        return Socialite::driver('google')->stateless()->redirect();
     }
 
     /**
-     * terima callback google
+     * terima callback goog le
      */
     public function callback(): RedirectResponse
     {
         try {
-            $googleUser = Socialite::driver('google')
-            ->stateless()
-            ->user();
+            $googleUser = Socialite::driver('google')->stateless()->user();
         } catch (\Throwable $e) {
-            return redirect(config('app.frontend_url').'/login?error=google_auth_failed');
+            return redirect(config('app.frontend_url') . '/login?error=google_auth_failed');
         }
 
         // cari pengguna berdasarkan google id, lalu ke email
-        $user = User::where('google_id', $googleUser->getId())
-            ->orWhere('email', $googleUser->getEmail())
-            ->first();
+        $user = User::where('google_id', $googleUser->getId())->orWhere('email', $googleUser->getEmail())->first();
 
         if ($user) {
-            if (! $user->google_id) {
+            if (!$user->google_id) {
                 $user->update(['google_id' => $googleUser->getId()]);
+            }
+            if (!$user->avatar && $googleUser->getAvatar()) {
+                $user->update(['avatar' => $googleUser->getAvatar()]);
             }
         } else {
             $user = User::create([
                 'name' => $googleUser->getName(),
                 'email' => $googleUser->getEmail(),
                 'google_id' => $googleUser->getId(),
+                'avatar' => $googleUser->getAvatar(),
                 'password' => Hash::make(Str::random(24)),
-                'email_verified_at' => now(), // email Google terverifikasi
-                'peran' => User::ROLE_USER,
+                'email_verified_at' => now(),
+                'role' => User::ROLE_USER,
             ]);
         }
 
         $exchangeCode = Str::random(40);
         Cache::put("google_auth_code:{$exchangeCode}", $user->id, now()->addSeconds(60));
 
-        return redirect(config('app.frontend_url')."/auth/callback?code={$exchangeCode}");
+        return redirect(config('app.frontend_url') . "/auth/callback?code={$exchangeCode}");
     }
 
     public function exchange(Request $request): JsonResponse
@@ -69,10 +67,13 @@ class GoogleAuthController extends Controller
 
         $userId = Cache::pull("google_auth_code:{$request->code}");
 
-        if (! $userId) {
-            return response()->json([
-                'message' => 'Kode tidak valid atau sudah kedaluwarsa.',
-            ], 401);
+        if (!$userId) {
+            return response()->json(
+                [
+                    'message' => 'Kode tidak valid atau sudah kedaluwarsa.',
+                ],
+                401,
+            );
         }
 
         $user = User::findOrFail($userId);

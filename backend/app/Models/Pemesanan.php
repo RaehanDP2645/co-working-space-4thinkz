@@ -27,6 +27,7 @@ class Pemesanan extends Model
         'waktu_mulai',
         'waktu_selesai',
         'jumlah_orang',
+        'catatan',
         'status',
         'total_biaya',
         'batas_pembayaran',

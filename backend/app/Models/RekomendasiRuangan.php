@@ -18,16 +18,23 @@ class RekomendasiRuangan extends Model
         'jumlah_peserta',
         'jenis_aktivitas',
         'anggaran',
-        'kebutuhan_privasi',
+        'tingkat_privasi',
         'alasan_rekomendasi',
+        'skor_rekomendasi',
     ];
 
     protected $casts = [
         'anggaran' => 'decimal:2',
+        'skor_rekomendasi' => 'decimal:2',
     ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function ruangan(): BelongsTo
+    {
+        return $this->belongsTo(Ruangan::class, 'ruangan_id');
     }
 }

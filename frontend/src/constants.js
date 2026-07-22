@@ -1,3 +1,16 @@
+export const ROOM_PHOTOS = {
+  'Ruang Rapat Utama': '/foto/ruang rapat utama.jpg',
+  'Private Office Premium': '/foto/privateroom.jpg',
+  'Meeting Room Kecil': '/foto/Meeting Room Kecil.jpg',
+  'Event Hall': '/foto/event hall.jpg',
+  'Open Space Area': '/foto/open space room.JPEG',
+  'Cozy Corner': '/foto/cozy.jpg',
+};
+
+export function getRoomImg(name, fallback) {
+  return ROOM_PHOTOS[name] || fallback || '';
+}
+
 export const ROOMS = [
   { id: 1, name: "Ruang Meeting A", privacy: "meeting", cap: 10, price: 150000, img: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=600" },
   { id: 2, name: "Ruang Meeting B", privacy: "meeting", cap: 20, price: 250000, img: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=600" },

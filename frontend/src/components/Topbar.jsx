@@ -16,7 +16,11 @@ export default function Topbar({ user, onToggleSidebar, notifications = [], onCl
       <div className="topbar-right">
         <div className="topbar-desktop-right">
           <div className="user-avatar-chip">
-            {user.name.split(" ").map(w=>w[0]).slice(0,2).join("")}
+            {user.avatar ? (
+              <img src={user.avatar} alt="" style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"50%"}} />
+            ) : (
+              user.name.split(" ").map(w=>w[0]).slice(0,2).join("")
+            )}
           </div>
           <NotifBell notifications={notifications} onClear={onClearNotification} />
         </div>

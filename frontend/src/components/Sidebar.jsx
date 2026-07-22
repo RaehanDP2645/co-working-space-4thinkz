@@ -1,10 +1,11 @@
 import React from 'react';
-import { IconHome, IconRooms, IconCalendar, IconPayment, IconHistory, IconProfile, IconLogout, IconClose, IconLogo } from './Icons';
+import { IconHome, IconRooms, IconCalendar, IconPayment, IconHistory, IconProfile, IconLogout, IconClose, IconLogo, IconSparkles } from './Icons';
 
 export default function Sidebar({ page, setPage, onLogout, isOpen, onClose }) {
   const items = [
     { key: "dashboard", label: "Dashboard", ic: <IconHome /> },
     { key: "rooms", label: "Daftar Ruangan", ic: <IconRooms /> },
+    { key: "recommendation", label: "Rekomendasi AI", ic: <IconSparkles /> },
     { key: "myres", label: "Reservasi Saya", ic: <IconCalendar /> },
     { key: "payment", label: "Pembayaran", ic: <IconPayment /> },
     { key: "history", label: "Riwayat", ic: <IconHistory /> },

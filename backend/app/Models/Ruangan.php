@@ -57,6 +57,6 @@ class Ruangan extends Model
     {
         return $this->gambar
             ? asset('storage/'.$this->gambar)
-            : asset('images/default-room.jpg');
+            : asset('images/default-room.svg');
     }
 }

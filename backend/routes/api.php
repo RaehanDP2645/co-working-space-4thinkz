@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\FasilitasController;
 use App\Http\Controllers\Api\RuanganController;
 use App\Http\Controllers\Api\PaywuzController;
 use App\Http\Controllers\Api\PemesananController;
+use App\Http\Controllers\Api\AssistantController;
+use App\Http\Controllers\Api\RekomendasiController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\GoogleAuthController;
@@ -39,6 +41,18 @@ Route::get('/rooms', [RuanganController::class, 'index']);
 Route::get('/rooms/{ruangan}', [RuanganController::class, 'show']);
 Route::get('/facilities', [FasilitasController::class, 'index']);
 Route::get('/facilities/{fasilitas}', [FasilitasController::class, 'show']);
+
+/*
+| Rekomendasi Ruangan (Expert System - Forward Chaining)
+*/
+Route::post('/rekomendasi', [RekomendasiController::class, 'recommend']);
+
+/*
+| Asisten AI (OpenClaw)
+*/
+Route::post('/assistant/chat', [AssistantController::class, 'chat']);
+Route::get('/rekomendasi/history', [RekomendasiController::class, 'history'])
+    ->middleware('auth:sanctum');
 
 /*
 | PayWuzz Payment Gateway
